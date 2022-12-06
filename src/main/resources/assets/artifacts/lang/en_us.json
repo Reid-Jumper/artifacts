@@ -1,2 +1,11 @@
 {
+  "itemGroup.artifacts": "Artifacts Mod",
+
+  "item.artifacts.a": "A",
+  "item.artifacts.b": "B",
+  "item.artifacts.c": "C",
+  "item.artifacts.d": "D",
+  "item.artifacts.e": "E",
+  "item.artifacts.f": "F",
+  "item.artifacts.g": "G"
 }
