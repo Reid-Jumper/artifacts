@@ -36,7 +36,7 @@ public class BlockInit {
         final IForgeRegistry<Item> registry = event.getRegistry();
 
         BLOCKS.getEntries().stream().map(RegistryObject::get).forEach( (block) -> {
-            final Item.Properties properties = new Item.Properties().tab(ItemInit.ModCreativeTab.instance);
+            final Item.Properties properties = new Item.Properties().tab(ItemInit.ArtifactsTab.instance);
             final BlockItem blockItem = new BlockItem(block, properties);
             blockItem.setRegistryName(block.getRegistryName());
             registry.register(blockItem);
