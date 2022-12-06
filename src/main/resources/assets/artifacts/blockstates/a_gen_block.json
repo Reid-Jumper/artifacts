@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "artifacts:block/a_gen_block"
+    }
+  }
+}

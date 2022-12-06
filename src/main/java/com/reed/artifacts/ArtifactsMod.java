@@ -1,6 +1,7 @@
 package com.reed.artifacts;
 
 import com.mojang.logging.LogUtils;
+import com.reed.artifacts.init.BlockInit;
 import com.reed.artifacts.init.ItemInit;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -40,6 +41,7 @@ public class ArtifactsMod
 
         modEventBus.addListener(this::setup);
         ItemInit.ITEMS.register(modEventBus);
+        BlockInit.BLOCKS.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
