@@ -1,10 +1,17 @@
 package com.reed.artifacts;
 
+import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.logging.LogUtils;
 import com.reed.artifacts.init.BlockInit;
 import com.reed.artifacts.init.ItemInit;
+import net.minecraft.commands.arguments.CompoundTagArgument;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -17,6 +24,7 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
+import net.minecraft.nbt.CompoundTag;
 
 import java.util.stream.Collectors;
 
@@ -70,10 +78,25 @@ public class ArtifactsMod
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event)
+    public void onServerStarting(ServerStartingEvent event) throws CommandSyntaxException
     {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
+
+        Vec3 spawnpos = new Vec3(0.0, 70.0, 0.0);
+        CompoundTag tag;
+        try {
+            tag = CompoundTagArgument.compoundTag().parse(new StringReader("{Item:{id:\"minecraft:iron_ingot\",Count:1}}"));
+        } catch (CommandSyntaxException e) {
+            throw e;
+        }
+        ServerLevel level = event.getServer().overworld();
+
+
+        Entity entity = EntityType.loadEntityRecursive(tag, level, (p_138828_) -> {
+            p_138828_.moveTo(spawnpos.x, spawnpos.y, spawnpos.z, p_138828_.getYRot(), p_138828_.getXRot());
+            return p_138828_;
+        });
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
