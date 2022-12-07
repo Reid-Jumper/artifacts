@@ -2,18 +2,22 @@ package com.reed.artifacts;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.logging.LogUtils;
 import com.reed.artifacts.init.BlockInit;
 import com.reed.artifacts.init.ItemInit;
 import net.minecraft.commands.arguments.CompoundTagArgument;
+import net.minecraft.commands.arguments.EntitySummonArgument;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
@@ -25,6 +29,10 @@ import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.commands.arguments.EntitySummonArgument;
 
 import java.util.stream.Collectors;
 
@@ -83,13 +91,22 @@ public class ArtifactsMod
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
 
+        /*
         Vec3 spawnpos = new Vec3(0.0, 70.0, 0.0);
         CompoundTag tag;
-        try {
-            tag = CompoundTagArgument.compoundTag().parse(new StringReader("{Item:{id:\"minecraft:iron_ingot\",Count:1}}"));
-        } catch (CommandSyntaxException e) {
-            throw e;
-        }
+        tag = new CompoundTag();
+        CompoundTag Item = new CompoundTag();
+        CompoundTag outer = new CompoundTag();
+        ResourceLocation loc = new ResourceLocation("minecraft:item");
+        Registry.ENTITY_TYPE.getOptional(loc).filter(EntityType::canSummon).orElseThrow(() -> {
+            return EntitySummonArgument.ERROR_UNKNOWN_ENTITY.create(loc);
+        });
+        Item.putString("id", "minecraft:iron_ingot");
+        Item.putInt("Count", 1);
+        outer.put("Item", Item);
+        tag.put("nbt", Item);
+        tag.putString("id", loc.toString());
+
         ServerLevel level = event.getServer().overworld();
 
 
@@ -97,6 +114,49 @@ public class ArtifactsMod
             p_138828_.moveTo(spawnpos.x, spawnpos.y, spawnpos.z, p_138828_.getYRot(), p_138828_.getXRot());
             return p_138828_;
         });
+        //((Mob)entity).finalizeSpawn(level, level.getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.COMMAND, (SpawnGroupData)null, (CompoundTag)null);
+        if(!level.tryAddFreshEntityWithPassengers(entity)) {
+
+        } else {
+            System.out.println("Howdy");
+        }
+        */
+
+    }
+
+    @SubscribeEvent
+    public void onPlayerLoad(final PlayerEvent.PlayerLoggedInEvent event) throws CommandSyntaxException{
+        Vec3 spawnpos = new Vec3(0.0, 70.0, 0.0);
+        CompoundTag tag;
+        tag = new CompoundTag();
+        CompoundTag Item = new CompoundTag();
+        CompoundTag outer = new CompoundTag();
+        ResourceLocation loc = new ResourceLocation("minecraft:item");
+        Registry.ENTITY_TYPE.getOptional(loc).filter(EntityType::canSummon).orElseThrow(() -> {
+            return EntitySummonArgument.ERROR_UNKNOWN_ENTITY.create(loc);
+        });
+        Item.putString("id", "minecraft:iron_ingot");
+        Item.putInt("Count", 1);
+        outer.put("Item", Item);
+        tag.put("nbt", outer);
+        tag.putString("id", loc.toString());
+
+        ServerLevel level = (ServerLevel) event.getPlayer().level;
+
+        level.addFreshEntity(new ItemEntity(level, 0, 70, 0, ), level);
+
+        Entity entity = EntityType.loadEntityRecursive(tag, level, (p_138828_) -> {
+            p_138828_.moveTo(spawnpos.x, spawnpos.y, spawnpos.z, p_138828_.getYRot(), p_138828_.getXRot());
+            return p_138828_;
+        });
+        System.out.println(entity.getRemovalReason());
+        //((Mob)entity).finalizeSpawn(level, level.getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.COMMAND, (SpawnGroupData)null, (CompoundTag)null);
+        if(!level.tryAddFreshEntityWithPassengers(entity)) {
+
+        } else {
+            System.out.println("Howdy");
+        }
+
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
@@ -111,4 +171,5 @@ public class ArtifactsMod
             LOGGER.info("HELLO from Register Block");
         }
     }
+
 }

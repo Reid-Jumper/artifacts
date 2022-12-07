@@ -22,11 +22,10 @@ public class TestCommand {
     private static int execute(ServerLevel dim) throws CommandSyntaxException {
         Vec3 spawnpos = new Vec3(0.0, 70.0, 0.0);
         CompoundTag tag;
-        try {
-            tag = CompoundTagArgument.compoundTag().parse(new StringReader("{Item:{id:\"minecraft:iron_ingot\",Count:1}}"));
-        } catch (CommandSyntaxException e) {
-            throw e;
-        }
+            tag = new CompoundTag();
+            tag.putString("nbt", "{Item:{id:\"minecraft:iron_ingot\",Count:1}}");
+            tag.putString("id", "minecraft:item");
+
 
 
         Entity entity = EntityType.loadEntityRecursive(tag, dim, (p_138828_) -> {
