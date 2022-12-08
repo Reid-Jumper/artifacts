@@ -6,6 +6,7 @@ import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.logging.LogUtils;
 import com.reed.artifacts.init.BlockInit;
 import com.reed.artifacts.init.ItemInit;
+import com.reed.artifacts.init.TileEntityInit;
 import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.EntitySummonArgument;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -58,6 +59,7 @@ public class ArtifactsMod
         modEventBus.addListener(this::setup);
         ItemInit.ITEMS.register(modEventBus);
         BlockInit.BLOCKS.register(modEventBus);
+        TileEntityInit.TILE_ENTITY_TYPES.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
