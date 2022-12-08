@@ -86,41 +86,10 @@ public class ArtifactsMod
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
-    public void onServerStarting(ServerStartingEvent event) throws CommandSyntaxException
+    public void onServerStarting(ServerStartingEvent event)
     {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
-
-        /*
-        Vec3 spawnpos = new Vec3(0.0, 70.0, 0.0);
-        CompoundTag tag;
-        tag = new CompoundTag();
-        CompoundTag Item = new CompoundTag();
-        CompoundTag outer = new CompoundTag();
-        ResourceLocation loc = new ResourceLocation("minecraft:item");
-        Registry.ENTITY_TYPE.getOptional(loc).filter(EntityType::canSummon).orElseThrow(() -> {
-            return EntitySummonArgument.ERROR_UNKNOWN_ENTITY.create(loc);
-        });
-        Item.putString("id", "minecraft:iron_ingot");
-        Item.putInt("Count", 1);
-        outer.put("Item", Item);
-        tag.put("nbt", Item);
-        tag.putString("id", loc.toString());
-
-        ServerLevel level = event.getServer().overworld();
-
-
-        Entity entity = EntityType.loadEntityRecursive(tag, level, (p_138828_) -> {
-            p_138828_.moveTo(spawnpos.x, spawnpos.y, spawnpos.z, p_138828_.getYRot(), p_138828_.getXRot());
-            return p_138828_;
-        });
-        //((Mob)entity).finalizeSpawn(level, level.getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.COMMAND, (SpawnGroupData)null, (CompoundTag)null);
-        if(!level.tryAddFreshEntityWithPassengers(entity)) {
-
-        } else {
-            System.out.println("Howdy");
-        }
-        */
 
     }
 
@@ -135,27 +104,20 @@ public class ArtifactsMod
         Registry.ENTITY_TYPE.getOptional(loc).filter(EntityType::canSummon).orElseThrow(() -> {
             return EntitySummonArgument.ERROR_UNKNOWN_ENTITY.create(loc);
         });
-        Item.putString("id", "minecraft:iron_ingot");
-        Item.putInt("Count", 1);
-        outer.put("Item", Item);
-        tag.put("nbt", outer);
-        tag.putString("id", loc.toString());
-
-        ServerLevel level = (ServerLevel) event.getPlayer().level;
-
-        level.addFreshEntity(new ItemEntity(level, 0, 70, 0, ), level);
-
-        Entity entity = EntityType.loadEntityRecursive(tag, level, (p_138828_) -> {
-            p_138828_.moveTo(spawnpos.x, spawnpos.y, spawnpos.z, p_138828_.getYRot(), p_138828_.getXRot());
+        CompoundTag compoundtag = new CompoundTag();
+        CompoundTag item = new CompoundTag();
+        item.putString("id", "minecraft:iron_ingot");
+        item.putInt("Count", 7);
+        compoundtag.put("Item", item);
+        compoundtag.putString("id", "minecraft:item");
+        ServerLevel serverLevel = (ServerLevel)event.getPlayer().getLevel();
+        Entity entity = EntityType.loadEntityRecursive(compoundtag, serverLevel, (p_138828_) -> {
+            p_138828_.moveTo(0, 85, 0, p_138828_.getYRot(), p_138828_.getXRot());
             return p_138828_;
         });
-        System.out.println(entity.getRemovalReason());
+        serverLevel.tryAddFreshEntityWithPassengers(entity);
         //((Mob)entity).finalizeSpawn(level, level.getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.COMMAND, (SpawnGroupData)null, (CompoundTag)null);
-        if(!level.tryAddFreshEntityWithPassengers(entity)) {
 
-        } else {
-            System.out.println("Howdy");
-        }
 
     }
 
