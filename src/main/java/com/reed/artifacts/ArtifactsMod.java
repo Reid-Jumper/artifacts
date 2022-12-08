@@ -2,6 +2,7 @@ package com.reed.artifacts;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
+<<<<<<< Updated upstream
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.logging.LogUtils;
 import com.reed.artifacts.init.BlockInit;
@@ -20,6 +21,30 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
+=======
+import com.mojang.logging.LogUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.arguments.CompoundTagArgument;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ScoreComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.ServerScoreboard;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.scores.Objective;
+import net.minecraft.world.scores.PlayerTeam;
+import net.minecraft.world.scores.Score;
+import net.minecraft.world.scores.Scoreboard;
+import net.minecraft.world.scores.criteria.ObjectiveCriteria;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+>>>>>>> Stashed changes
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
@@ -38,12 +63,22 @@ import net.minecraft.commands.arguments.EntitySummonArgument;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
+<<<<<<< Updated upstream
 @Mod(ArtifactsMod.MOD_ID)
 public class ArtifactsMod
 {
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final String MOD_ID = "artifacts";
+=======
+@Mod("artifacts")
+public class ArtifactsMod {
+    // Directly reference a slf4j logger
+    private static final Logger LOGGER = LogUtils.getLogger();
+    private MinecraftServer server;
+    private PlayerTeam a;
+    private PlayerTeam b;
+>>>>>>> Stashed changes
 
     public ArtifactsMod()
     {
@@ -93,6 +128,7 @@ public class ArtifactsMod
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
 
+<<<<<<< Updated upstream
     }
 
     @SubscribeEvent
@@ -120,6 +156,34 @@ public class ArtifactsMod
         serverLevel.tryAddFreshEntityWithPassengers(entity);
         //((Mob)entity).finalizeSpawn(level, level.getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.COMMAND, (SpawnGroupData)null, (CompoundTag)null);
 
+=======
+        server = event.getServer();
+        ServerScoreboard scoreboard = event.getServer().getScoreboard();
+
+        if (server.getScoreboard().getPlayerTeams().size() <= 0) {
+            a = server.getScoreboard().addPlayerTeam("A");
+            b = server.getScoreboard().addPlayerTeam("B");
+            a.setColor(ChatFormatting.BLUE);
+            b.setColor(ChatFormatting.RED);
+            server.getScoreboard().addPlayerToTeam(a.getName(), a);
+            server.getScoreboard().addPlayerToTeam(b.getName(), b);
+        } else {
+            a = server.getScoreboard().getPlayerTeam("A");
+            b = server.getScoreboard().getPlayerTeam("B");
+        }
+
+        if (!scoreboard.hasObjective("Test")) {
+            Objective objective = scoreboard.addObjective("Test", ObjectiveCriteria.DUMMY, new TextComponent("Test"), ObjectiveCriteria.RenderType.INTEGER);
+
+            scoreboard.setDisplayObjective(Scoreboard.DISPLAY_SLOT_SIDEBAR, objective);
+
+            Score aScore = server.getScoreboard().getOrCreatePlayerScore(a.getName(), objective);
+            Score bScore = server.getScoreboard().getOrCreatePlayerScore(b.getName(), objective);
+            aScore.increment();
+            aScore.increment();
+            bScore.increment();
+        }
+>>>>>>> Stashed changes
 
     }
 
@@ -136,4 +200,17 @@ public class ArtifactsMod
         }
     }
 
+<<<<<<< Updated upstream
+=======
+    @SubscribeEvent
+    public void onConnect(PlayerEvent.PlayerLoggedInEvent event) {
+        if (server.getScoreboard().getPlayersTeam(event.getPlayer().getScoreboardName()) == null) {
+            if (a.getPlayers().size() > b.getPlayers().size()) {
+                server.getScoreboard().addPlayerToTeam(event.getPlayer().getScoreboardName(), b);
+            } else {
+                server.getScoreboard().addPlayerToTeam(event.getPlayer().getScoreboardName(), a);
+            }
+        }
+    }
+>>>>>>> Stashed changes
 }
