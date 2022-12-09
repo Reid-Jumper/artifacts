@@ -1,26 +1,20 @@
 package com.reed.artifacts.items;
 
+import com.reed.artifacts.util.ArtifactType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 
 public class EItem extends SwordItem implements IArtifactItem {
-    private int existCount;
-    public EItem(Tier tier, int strength, float speed, Item.Properties prop) {
+    private ArtifactType artifactType;
+    public EItem(Tier tier, int strength, float speed, ArtifactType type, Item.Properties prop) {
         super(tier, strength, speed, prop);
-        existCount = 0;
+        artifactType = type;
     }
 
     @Override
-    public void onDestroyed(ItemEntity entity) {
-        if(existCount > 0)
-            existCount--;
-    }
-    public int getExistCount() {
-        return existCount;
-    }
-    public void spawned() {
-        existCount++;
+    public ArtifactType getArtifactType() {
+        return artifactType;
     }
 }

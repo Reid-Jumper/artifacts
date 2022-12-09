@@ -1,25 +1,19 @@
 package com.reed.artifacts.items;
 
+import com.reed.artifacts.util.ArtifactType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Item;
 
 public class GItem extends BowItem implements IArtifactItem {
-    private int existCount;
-    public GItem(Item.Properties prop) {
+    private ArtifactType artifactType;
+    public GItem(ArtifactType type, Item.Properties prop) {
         super(prop);
-        existCount = 0;
+        artifactType = type;
     }
 
     @Override
-    public void onDestroyed(ItemEntity entity) {
-        if(existCount > 0)
-            existCount--;
-    }
-    public int getExistCount() {
-        return existCount;
-    }
-    public void spawned() {
-        existCount++;
+    public ArtifactType getArtifactType() {
+        return artifactType;
     }
 }

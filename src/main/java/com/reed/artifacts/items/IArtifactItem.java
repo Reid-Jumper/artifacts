@@ -1,9 +1,9 @@
 package com.reed.artifacts.items;
 
+import com.reed.artifacts.util.ArtifactType;
 import net.minecraft.world.level.ItemLike;
 
 public interface IArtifactItem extends ItemLike {
-    int existCount = 0;
-    int getExistCount();
-    void spawned();
+    ArtifactType artifactType = ArtifactType.A;
+    ArtifactType getArtifactType();
 }

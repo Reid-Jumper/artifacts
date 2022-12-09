@@ -1,5 +1,6 @@
 package com.reed.artifacts.items;
 
+import com.reed.artifacts.util.ArtifactType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ArmorItem;
@@ -7,21 +8,15 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 
 public class BItem extends ArmorItem implements IArtifactItem {
-    private int existCount;
-    public BItem(ArmorMaterial material, EquipmentSlot slot, Item.Properties prop) {
+
+    private ArtifactType artifactType;
+    public BItem(ArmorMaterial material, EquipmentSlot slot, ArtifactType type, Item.Properties prop) {
         super(material, slot, prop);
-        existCount = 0;
+        artifactType = type;
     }
 
     @Override
-    public void onDestroyed(ItemEntity entity) {
-        if(existCount > 0)
-            existCount--;
-    }
-    public int getExistCount() {
-        return existCount;
-    }
-    public void spawned() {
-        existCount++;
+    public ArtifactType getArtifactType() {
+        return artifactType;
     }
 }

@@ -7,6 +7,7 @@ import com.mojang.logging.LogUtils;
 import com.reed.artifacts.init.BlockInit;
 import com.reed.artifacts.init.ItemInit;
 import com.reed.artifacts.init.TileEntityInit;
+import com.reed.artifacts.items.ArtifactHandler;
 import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.EntitySummonArgument;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -44,6 +45,7 @@ public class ArtifactsMod
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final String MOD_ID = "artifacts";
+    public static final ArtifactHandler handler = new ArtifactHandler();
 
     public ArtifactsMod()
     {
