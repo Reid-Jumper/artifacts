@@ -6,17 +6,22 @@ import com.reed.artifacts.init.BlockInit;
 import com.reed.artifacts.init.ItemInit;
 import com.reed.artifacts.init.TileEntityInit;
 import net.minecraft.Util;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -119,6 +124,30 @@ public class ArtifactsMod
         } else if (!server.overworld().isNight() && !server.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             server.getPlayerList().broadcastMessage(new TextComponent("Day has arrived. A weight has lifted..."), ChatType.SYSTEM, Util.NIL_UUID);
             server.getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).set(true, server);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerDisconnect(final PlayerEvent.PlayerLoggedOutEvent event) {
+        if (event.getPlayer().getInventory().contains(new TagKey<>(Registry.ITEM_REGISTRY, new ResourceLocation("forge", "ingots/iron")))) {
+
+        }
+    }
+
+
+    @SubscribeEvent
+    public void onLivingDeath(LivingDeathEvent event) {
+        if (event.getEntityLiving() instanceof Player) {
+            CompoundTag compoundtag = new CompoundTag();
+            CompoundTag item = new CompoundTag();
+            item.putString("id", "minecraft:iron_ingot");
+            item.putInt("Count", 7);
+            compoundtag.put("Item", item);
+            compoundtag.putString("id", "minecraft:item");
+            if (((Player) event.getEntityLiving()).getInventory().contains(new TagKey<>(Registry.ITEM_REGISTRY, new ResourceLocation("forge", "ingots/iron")))) {
+                event.setCanceled(true);
+
+            }
         }
     }
 
