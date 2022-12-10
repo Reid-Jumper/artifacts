@@ -15,19 +15,19 @@ public class ItemInit {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, ArtifactsMod.MOD_ID);
     public static final RegistryObject<Item> A = ITEMS.register("a",
-            () -> new AItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.HEAD, ArtifactType.A, new Item.Properties().tab(ArtifactsTab.instance)));
+            () -> new AItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.HEAD, new Item.Properties().tab(ArtifactsTab.instance)));
     public static final RegistryObject<Item> B = ITEMS.register("b",
-            () -> new BItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.CHEST, ArtifactType.B, new Item.Properties().tab(ArtifactsTab.instance)));
+            () -> new BItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.CHEST, new Item.Properties().tab(ArtifactsTab.instance)));
     public static final RegistryObject<Item> C = ITEMS.register("c",
-            () ->  new CItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.LEGS, ArtifactType.C, new Item.Properties().tab(ArtifactsTab.instance)));
+            () ->  new CItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.LEGS, new Item.Properties().tab(ArtifactsTab.instance)));
     public static final RegistryObject<Item> D = ITEMS.register("d",
-            () -> new DItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.FEET, ArtifactType.D, new Item.Properties().tab(ArtifactsTab.instance)));
+            () -> new DItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.FEET, new Item.Properties().tab(ArtifactsTab.instance)));
     public static final RegistryObject<Item> E = ITEMS.register("e",
-            () -> new EItem(AncientArtifactsTier.ANCIENT_ARTIFACT, 3, -2.4F, ArtifactType.E, new Item.Properties().tab(ArtifactsTab.instance)));
+            () -> new EItem(AncientArtifactsTier.ANCIENT_ARTIFACT, 3, -2.4F, new Item.Properties().tab(ArtifactsTab.instance)));
     public static final RegistryObject<Item> F = ITEMS.register("f",
-            () -> new FItem(ArtifactType.F, new Item.Properties().tab(ArtifactsTab.instance)));
+            () -> new FItem(new Item.Properties().tab(ArtifactsTab.instance)));
     public static final RegistryObject<Item> G = ITEMS.register("g",
-            () -> new GItem(ArtifactType.G, new Item.Properties().tab(ArtifactsTab.instance)));
+            () -> new GItem(new Item.Properties().tab(ArtifactsTab.instance)));
 
     public static class ArtifactsTab extends CreativeModeTab {
 

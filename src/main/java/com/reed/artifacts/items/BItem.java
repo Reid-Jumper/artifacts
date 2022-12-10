@@ -1,5 +1,6 @@
 package com.reed.artifacts.items;
 
+import com.reed.artifacts.ArtifactsMod;
 import com.reed.artifacts.util.ArtifactType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -10,13 +11,21 @@ import net.minecraft.world.item.Item;
 public class BItem extends ArmorItem implements IArtifactItem {
 
     private ArtifactType artifactType;
-    public BItem(ArmorMaterial material, EquipmentSlot slot, ArtifactType type, Item.Properties prop) {
+    public BItem(ArmorMaterial material, EquipmentSlot slot, Item.Properties prop) {
         super(material, slot, prop);
-        artifactType = type;
+        artifactType = ArtifactType.B;
     }
 
     @Override
     public ArtifactType getArtifactType() {
         return artifactType;
+    }
+
+    @Override
+    public void onDestroyed(ItemEntity entity) {
+        Item item = entity.getItem().getItem();
+        if(item instanceof BItem) {
+            ArtifactsMod.handler.clearArtifact(ArtifactType.B);
+        }
     }
 }

@@ -11,24 +11,14 @@ import net.minecraft.world.item.Item;
 public class AItem extends ArmorItem implements IArtifactItem {
 
     private ArtifactType artifactType;
-    public AItem(ArmorMaterial material, EquipmentSlot slot, ArtifactType type, Item.Properties prop) {
+    public AItem(ArmorMaterial material, EquipmentSlot slot, Item.Properties prop) {
         super(material, slot, prop);
-        artifactType = type;
+        artifactType = ArtifactType.A;
     }
-    /*
-    public AItem(AItem item) {
-        super(item.getMaterial(), item.getSlot(), );
-        artifactType = item.getArtifactType();
-    }
-    */
 
     @Override
     public ArtifactType getArtifactType() {
         return artifactType;
-    }
-
-    public IArtifactItem getAsArtifactItem() {
-        return this;
     }
 
     @Override
