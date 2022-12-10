@@ -1,8 +1,6 @@
 package com.reed.artifacts;
 
-import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import com.mojang.logging.LogUtils;
 import com.reed.artifacts.init.BlockInit;
 import com.reed.artifacts.init.ItemInit;
@@ -11,14 +9,18 @@ import com.reed.artifacts.items.ArtifactHandler;
 import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.EntitySummonArgument;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.Util;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -31,10 +33,7 @@ import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.Registry;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.commands.arguments.EntitySummonArgument;
 
 import java.util.stream.Collectors;
 
@@ -46,6 +45,8 @@ public class ArtifactsMod
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final String MOD_ID = "artifacts";
     public static final ArtifactHandler handler = new ArtifactHandler();
+
+    public MinecraftServer server;
 
     public ArtifactsMod()
     {
@@ -94,20 +95,13 @@ public class ArtifactsMod
     {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
+        server = event.getServer();
 
     }
 
     @SubscribeEvent
-    public void onPlayerLoad(final PlayerEvent.PlayerLoggedInEvent event) throws CommandSyntaxException{
-        Vec3 spawnpos = new Vec3(0.0, 70.0, 0.0);
-        CompoundTag tag;
-        tag = new CompoundTag();
-        CompoundTag Item = new CompoundTag();
-        CompoundTag outer = new CompoundTag();
-        ResourceLocation loc = new ResourceLocation("minecraft:item");
-        Registry.ENTITY_TYPE.getOptional(loc).filter(EntityType::canSummon).orElseThrow(() -> {
-            return EntitySummonArgument.ERROR_UNKNOWN_ENTITY.create(loc);
-        });
+    public void onPlayerLogin(final PlayerEvent.PlayerLoggedInEvent event) throws CommandSyntaxException{
+
         CompoundTag compoundtag = new CompoundTag();
         CompoundTag item = new CompoundTag();
         item.putString("id", "minecraft:iron_ingot");
@@ -120,9 +114,17 @@ public class ArtifactsMod
             return p_138828_;
         });
         serverLevel.tryAddFreshEntityWithPassengers(entity);
-        //((Mob)entity).finalizeSpawn(level, level.getCurrentDifficultyAt(entity.blockPosition()), MobSpawnType.COMMAND, (SpawnGroupData)null, (CompoundTag)null);
+    }
 
-
+    @SubscribeEvent
+    public void onServerTick(TickEvent.ServerTickEvent event) {
+        if (server.overworld().isNight() && server.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+            server.getPlayerList().broadcastMessage(new TextComponent("Night has fallen. The world grows more dangerous..."), ChatType.SYSTEM, Util.NIL_UUID);
+            server.getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).set(false, server);
+        } else if (!server.overworld().isNight() && !server.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+            server.getPlayerList().broadcastMessage(new TextComponent("Day has arrived. A weight has lifted..."), ChatType.SYSTEM, Util.NIL_UUID);
+            server.getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).set(true, server);
+        }
     }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
