@@ -1,7 +1,7 @@
 package com.reed.artifacts.init;
 
 import com.reed.artifacts.ArtifactsMod;
-import com.reed.artifacts.blockentities.block.AGenBlock;
+import com.reed.artifacts.blockentities.block.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,17 +20,17 @@ public class BlockInit {
     public static final RegistryObject<Block> A_GEN_BLOCK = BLOCKS.register("a_gen_block",
             () -> new AGenBlock(Block.Properties.of(Material.STONE).strength(4f, 1200f).lightLevel((state) -> 15)));
     public static final RegistryObject<Block> B_GEN_BLOCK = BLOCKS.register("b_gen_block",
-            () -> new Block(Block.Properties.of(Material.STONE).strength(4f, 1200f).lightLevel((state) -> 15)));
+            () -> new BGenBlock(Block.Properties.of(Material.STONE).strength(4f, 1200f).lightLevel((state) -> 15)));
     public static final RegistryObject<Block> C_GEN_BLOCK = BLOCKS.register("c_gen_block",
-            () -> new Block(Block.Properties.of(Material.STONE).strength(4f, 1200f).lightLevel((state) -> 15)));
+            () -> new CGenBlock(Block.Properties.of(Material.STONE).strength(4f, 1200f).lightLevel((state) -> 15)));
     public static final RegistryObject<Block> D_GEN_BLOCK = BLOCKS.register("d_gen_block",
-            () -> new Block(Block.Properties.of(Material.STONE).strength(4f, 1200f).lightLevel((state) -> 15)));
+            () -> new DGenBlock(Block.Properties.of(Material.STONE).strength(4f, 1200f).lightLevel((state) -> 15)));
     public static final RegistryObject<Block> E_GEN_BLOCK = BLOCKS.register("e_gen_block",
-            () -> new Block(Block.Properties.of(Material.STONE).strength(4f, 1200f).lightLevel((state) -> 15)));
+            () -> new EGenBlock(Block.Properties.of(Material.STONE).strength(4f, 1200f).lightLevel((state) -> 15)));
     public static final RegistryObject<Block> F_GEN_BLOCK = BLOCKS.register("f_gen_block",
-            () -> new Block(Block.Properties.of(Material.STONE).strength(4f, 1200f).lightLevel((state) -> 15)));
+            () -> new FGenBlock(Block.Properties.of(Material.STONE).strength(4f, 1200f).lightLevel((state) -> 15)));
     public static final RegistryObject<Block> G_GEN_BLOCK = BLOCKS.register("g_gen_block",
-            () -> new Block(Block.Properties.of(Material.STONE).strength(4f, 1200f).lightLevel((state) -> 15)));
+            () -> new GGenBlock(Block.Properties.of(Material.STONE).strength(4f, 1200f).lightLevel((state) -> 15)));
 
     @SubscribeEvent
     public static void onRegisterItems(final RegistryEvent.Register<Item> event) {
