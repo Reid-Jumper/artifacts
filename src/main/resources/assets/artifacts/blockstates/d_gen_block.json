@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "artifacts:block/e_gen_block"
+      "model": "artifacts:block/d_gen_block"
     }
   }
 }
