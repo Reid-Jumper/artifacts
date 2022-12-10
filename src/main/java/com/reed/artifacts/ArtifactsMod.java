@@ -5,6 +5,10 @@ import com.mojang.logging.LogUtils;
 import com.reed.artifacts.init.BlockInit;
 import com.reed.artifacts.init.ItemInit;
 import com.reed.artifacts.init.TileEntityInit;
+import com.reed.artifacts.items.ArtifactHandler;
+import net.minecraft.commands.arguments.CompoundTagArgument;
+import net.minecraft.commands.arguments.EntitySummonArgument;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
@@ -40,6 +44,7 @@ public class ArtifactsMod
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final String MOD_ID = "artifacts";
+    public static final ArtifactHandler handler = new ArtifactHandler();
 
     public MinecraftServer server;
 
