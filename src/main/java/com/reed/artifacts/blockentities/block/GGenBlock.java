@@ -1,6 +1,6 @@
 package com.reed.artifacts.blockentities.block;
 
-import com.reed.artifacts.blockentities.entity.FGenTile;
+import com.reed.artifacts.blockentities.entity.GGenTile;
 import com.reed.artifacts.init.TileEntityInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -28,6 +28,6 @@ public class GGenBlock extends Block implements EntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return type == TileEntityInit.F_GEN_BLOCK.get() ? FGenTile::tick : null;
+        return type == TileEntityInit.G_GEN_BLOCK.get() ? GGenTile::tick : null;
     }
 }
