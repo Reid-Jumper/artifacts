@@ -12,7 +12,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
 public enum AncientArtifactsMaterial implements ArmorMaterial {
-    ANCIENT_ARTIFACT(ArtifactsMod.MOD_ID + ":ancient_artifacts", 20, new int[]{8, 20, 15, 7}, 50, SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0F, 0.1F, () -> {
+    ANCIENT_ARTIFACT(ArtifactsMod.MOD_ID + ":ancient_artifacts", 20, new int[]{7, 15, 20, 8}, 50, SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0F, 0.1F, () -> {
         return Ingredient.of(ItemInit.A.get());
     });
 
