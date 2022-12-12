@@ -133,7 +133,6 @@ public class ArtifactsMod
             server.getPlayerList().broadcastMessage(new TextComponent("Day has arrived. A weight has lifted..."), ChatType.SYSTEM, Util.NIL_UUID);
             server.getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).set(true, server);
             if(!HANDLER.checkOpenArtifact(ArtifactType.B)) {
-                server.getPlayerList().broadcastMessage(new TextComponent("You're wearing chest armor"), ChatType.SYSTEM, Util.NIL_UUID);
                 ((BItem)HANDLER.getArtifact(ArtifactType.B)).setFireResCharge(true);
                 ((BItem)HANDLER.getArtifact(ArtifactType.B)).setBreathCharge(true);
             }
