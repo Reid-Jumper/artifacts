@@ -22,7 +22,7 @@ public class GItem extends BowItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof GItem) {
-            ArtifactsMod.handler.clearArtifact(ArtifactType.G);
+            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.G);
         }
     }
 }

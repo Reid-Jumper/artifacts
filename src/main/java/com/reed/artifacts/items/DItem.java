@@ -25,7 +25,7 @@ public class DItem extends ArmorItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof DItem) {
-            ArtifactsMod.handler.clearArtifact(ArtifactType.D);
+            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.D);
         }
     }
 }

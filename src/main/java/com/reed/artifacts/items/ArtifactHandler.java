@@ -109,4 +109,22 @@ public class ArtifactHandler {
                 break;
         }
     }
+    public IArtifactItem getArtifact(ArtifactType type) {
+        switch (type) {
+            case A:
+                return a_item;
+            case B:
+                return b_item;
+            case C:
+                return c_item;
+            case D:
+                return d_item;
+            case E:
+                return e_item;
+            case F:
+                return f_item;
+            default:
+                return g_item;
+        }
+    }
 }
