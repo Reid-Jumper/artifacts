@@ -21,7 +21,7 @@ public class AGenTile extends BlockEntity {
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, T be) {
         AGenTile tile = (AGenTile) be;
-        if(ArtifactsMod.handler.checkOpenArtifact(ArtifactType.A) && !level.isClientSide) {
+        if(ArtifactsMod.HANDLER.checkOpenArtifact(ArtifactType.A) && !level.isClientSide) {
             CompoundTag tag;
             tag = new CompoundTag();
             CompoundTag Item = new CompoundTag();
@@ -29,7 +29,7 @@ public class AGenTile extends BlockEntity {
             ResourceLocation loc = new ResourceLocation("minecraft:item");
             CompoundTag compoundtag = new CompoundTag();
             CompoundTag item = new CompoundTag();
-            item.putString("id", "artifacts:a");
+            item.putString("id", "artifacts:forgotten_helm");
             item.putInt("Count", 1);
             compoundtag.put("Item", item);
             compoundtag.putString("id", "minecraft:item");
@@ -39,7 +39,7 @@ public class AGenTile extends BlockEntity {
             });
             ServerLevel serverLevel = (ServerLevel)level;
             if(serverLevel.tryAddFreshEntityWithPassengers(entity)) {
-                ArtifactsMod.handler.putArtifact((IArtifactItem)entity.getItem().getItem(), ArtifactType.A);
+                ArtifactsMod.HANDLER.putArtifact((IArtifactItem)entity.getItem().getItem(), ArtifactType.A);
             }
         }
     }

@@ -23,7 +23,7 @@ public class EItem extends SwordItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof EItem) {
-            ArtifactsMod.handler.clearArtifact(ArtifactType.E);
+            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.E);
         }
     }
 }

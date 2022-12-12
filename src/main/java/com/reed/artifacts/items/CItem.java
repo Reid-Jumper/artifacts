@@ -25,7 +25,7 @@ public class CItem extends ArmorItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof CItem) {
-            ArtifactsMod.handler.clearArtifact(ArtifactType.C);
+            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.C);
         }
     }
 }
