@@ -5,6 +5,7 @@ import com.mojang.logging.LogUtils;
 import com.reed.artifacts.init.BlockInit;
 import com.reed.artifacts.init.ItemInit;
 import com.reed.artifacts.init.TileEntityInit;
+import com.reed.artifacts.items.AItem;
 import com.reed.artifacts.items.ArtifactHandler;
 import com.reed.artifacts.items.BItem;
 import com.reed.artifacts.util.ArtifactType;
@@ -16,6 +17,7 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -137,6 +139,11 @@ public class ArtifactsMod
                 ((BItem)HANDLER.getArtifact(ArtifactType.B)).setBreathCharge(true);
             }
         }
+        server.getPlayerList().getPlayers().forEach((player) -> {
+            if(player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof AItem) {
+                player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 399, 0, true, true));
+            }
+        });
     }
     @SubscribeEvent
     public void onEntityDamaged(LivingDamageEvent event) {
