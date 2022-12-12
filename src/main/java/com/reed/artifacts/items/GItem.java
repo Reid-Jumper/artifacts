@@ -5,8 +5,9 @@ import com.reed.artifacts.util.ArtifactType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ShieldItem;
 
-public class GItem extends BowItem implements IArtifactItem {
+public class GItem extends ShieldItem implements IArtifactItem {
     private ArtifactType artifactType;
     public GItem(Item.Properties prop) {
         super(prop);

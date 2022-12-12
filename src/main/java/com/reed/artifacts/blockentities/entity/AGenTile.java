@@ -1,18 +1,13 @@
 package com.reed.artifacts.blockentities.entity;
 
 import com.reed.artifacts.ArtifactsMod;
-import com.reed.artifacts.init.ItemInit;
 import com.reed.artifacts.init.TileEntityInit;
-import com.reed.artifacts.items.AItem;
 import com.reed.artifacts.items.IArtifactItem;
 import com.reed.artifacts.util.ArtifactType;
-import net.minecraft.commands.arguments.EntitySummonArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.Level;
