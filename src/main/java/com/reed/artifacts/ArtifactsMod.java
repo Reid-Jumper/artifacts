@@ -8,6 +8,7 @@ import com.reed.artifacts.init.TileEntityInit;
 import com.reed.artifacts.items.AItem;
 import com.reed.artifacts.items.ArtifactHandler;
 import com.reed.artifacts.items.BItem;
+import com.reed.artifacts.items.CItem;
 import com.reed.artifacts.util.ArtifactType;
 import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.EntitySummonArgument;
@@ -142,6 +143,14 @@ public class ArtifactsMod
         server.getPlayerList().getPlayers().forEach((player) -> {
             if(player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof AItem) {
                 player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 399, 0, true, true));
+            }
+            if(player.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof CItem) {
+                if(server.overworld().isNight()) {
+                    player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 399, 0, true, true));
+                } else {
+                    player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 399, 0, true, true));
+                    player.addEffect(new MobEffectInstance(MobEffects.SATURATION, 399, 0, true, true));
+                }
             }
         });
     }
