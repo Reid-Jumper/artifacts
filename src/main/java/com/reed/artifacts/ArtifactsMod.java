@@ -5,10 +5,7 @@ import com.mojang.logging.LogUtils;
 import com.reed.artifacts.init.BlockInit;
 import com.reed.artifacts.init.ItemInit;
 import com.reed.artifacts.init.TileEntityInit;
-import com.reed.artifacts.items.AItem;
-import com.reed.artifacts.items.ArtifactHandler;
-import com.reed.artifacts.items.BItem;
-import com.reed.artifacts.items.CItem;
+import com.reed.artifacts.items.*;
 import com.reed.artifacts.util.ArtifactType;
 import net.minecraft.commands.arguments.CompoundTagArgument;
 import net.minecraft.commands.arguments.EntitySummonArgument;
@@ -16,6 +13,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -169,6 +167,44 @@ public class ArtifactsMod
                 event.getEntityLiving().addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 6000, 0, false, true));
                 ((BItem)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).setBreathCharge(false);
             }
+        }
+        if(entity.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof DItem && !entity.getLevel().isClientSide()) {
+            if(event.getSource().isFall()) {
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void itemDestoryed(ClientboundEntityEventPacket packet) {
+        switch(packet.getEventId()) {
+            case 47:
+                //Mainhand
+                server.getAllLevels().forEach((level) -> {
+                    LivingEntity entity = (LivingEntity)packet.getEntity(level);
+                    if(entity != null) {
+                        //entity
+                    }
+                });
+                break;
+            case 48:
+                //Offhand
+                break;
+            case 49:
+                //Head
+                break;
+            case 50:
+                //Chest
+                break;
+            case 51:
+                //Legs
+                break;
+            case 52:
+                //Feet
+                break;
+            default:
+                //OtherEvent
+                break;
         }
     }
 

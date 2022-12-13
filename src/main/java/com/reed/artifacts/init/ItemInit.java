@@ -21,7 +21,7 @@ public class ItemInit {
     public static final RegistryObject<Item> C = ITEMS.register("forgotten_legs",
             () ->  new CItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.LEGS, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
     public static final RegistryObject<Item> D = ITEMS.register("forgotten_boots",
-            () -> new DItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.FEET, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
+            () -> new DItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT_BOOTS, EquipmentSlot.FEET, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
     public static final RegistryObject<Item> E = ITEMS.register("forgotten_sword",
             () -> new EItem(AncientArtifactsTier.ANCIENT_ARTIFACT, 3, -2.4F, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
     public static final RegistryObject<Item> F = ITEMS.register("forgotten_bow",
