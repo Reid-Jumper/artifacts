@@ -170,39 +170,6 @@ public class ArtifactsMod
         }
     }
 
-    @SubscribeEvent
-    public void itemDestoryed(ClientboundEntityEventPacket packet) {
-        switch(packet.getEventId()) {
-            case 47:
-                //Mainhand
-                server.getAllLevels().forEach((level) -> {
-                    LivingEntity entity = (LivingEntity)packet.getEntity(level);
-                    if(entity != null) {
-                        //entity
-                    }
-                });
-                break;
-            case 48:
-                //Offhand
-                break;
-            case 49:
-                //Head
-                break;
-            case 50:
-                //Chest
-                break;
-            case 51:
-                //Legs
-                break;
-            case 52:
-                //Feet
-                break;
-            default:
-                //OtherEvent
-                break;
-        }
-    }
-
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
