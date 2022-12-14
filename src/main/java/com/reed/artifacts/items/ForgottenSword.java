@@ -2,18 +2,16 @@ package com.reed.artifacts.items;
 
 import com.reed.artifacts.ArtifactsMod;
 import com.reed.artifacts.util.ArtifactType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.Tier;
 
-public class CItem extends ArmorItem implements IArtifactItem {
-
+public class ForgottenSword extends SwordItem implements IArtifactItem {
     private ArtifactType artifactType;
-    public CItem(ArmorMaterial material, EquipmentSlot slot, Item.Properties prop) {
-        super(material, slot, prop);
-        artifactType = ArtifactType.C;
+    public ForgottenSword(Tier tier, int strength, float speed, Item.Properties prop) {
+        super(tier, strength, speed, prop);
+        artifactType = ArtifactType.E;
     }
 
     @Override
@@ -24,8 +22,8 @@ public class CItem extends ArmorItem implements IArtifactItem {
     @Override
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
-        if(item instanceof CItem) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.C);
+        if(item instanceof ForgottenSword) {
+            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.E);
         }
     }
 }

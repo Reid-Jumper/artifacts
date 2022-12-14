@@ -12,10 +12,10 @@ import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-public class AItem extends ArmorItem implements IArtifactItem {
+public class ForgottenHelm extends ArmorItem implements IArtifactItem {
 
     private ArtifactType artifactType;
-    public AItem(ArmorMaterial material, EquipmentSlot slot, Item.Properties prop) {
+    public ForgottenHelm(ArmorMaterial material, EquipmentSlot slot, Item.Properties prop) {
         super(material, slot, prop);
         artifactType = ArtifactType.A;
     }
@@ -28,7 +28,7 @@ public class AItem extends ArmorItem implements IArtifactItem {
     @Override
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
-        if(item instanceof AItem) {
+        if(item instanceof ForgottenHelm) {
             ArtifactsMod.HANDLER.clearArtifact(ArtifactType.A);
         }
     }

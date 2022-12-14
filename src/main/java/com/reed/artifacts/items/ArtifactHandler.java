@@ -4,13 +4,13 @@ import com.reed.artifacts.util.ArtifactTrackerTicker;
 import com.reed.artifacts.util.ArtifactType;
 
 public class ArtifactHandler {
-    private AItem a_item;
-    private BItem b_item;
-    private CItem c_item;
-    private DItem d_item;
-    private EItem e_item;
-    private FItem f_item;
-    private GItem g_item;
+    private ForgottenHelm a_item;
+    private ForgottenChestplate b_item;
+    private ForgottenLeggings c_item;
+    private ForgottenBoots d_item;
+    private ForgottenSword e_item;
+    private ForgottenBow f_item;
+    private ForgottenShield g_item;
     private ArtifactTrackerTicker a_tracker;
     private ArtifactTrackerTicker b_tracker;
     private ArtifactTrackerTicker c_tracker;
@@ -77,25 +77,25 @@ public class ArtifactHandler {
     public void putArtifact(IArtifactItem item, ArtifactType type) {
         switch (type) {
             case A:
-                a_item = (AItem)item;
+                a_item = (ForgottenHelm)item;
                 break;
             case B:
-                b_item = (BItem)item;
+                b_item = (ForgottenChestplate)item;
                 break;
             case C:
-                c_item = (CItem)item;
+                c_item = (ForgottenLeggings)item;
                 break;
             case D:
-                d_item = (DItem)item;
+                d_item = (ForgottenBoots)item;
                 break;
             case E:
-                e_item = (EItem)item;
+                e_item = (ForgottenSword)item;
                 break;
             case F:
-                f_item = (FItem)item;
+                f_item = (ForgottenBow)item;
                 break;
             case G:
-                g_item = (GItem)item;
+                g_item = (ForgottenShield)item;
                 break;
         }
     }

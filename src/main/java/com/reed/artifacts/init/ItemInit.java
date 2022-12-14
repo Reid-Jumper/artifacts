@@ -14,18 +14,18 @@ public class ItemInit {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, ArtifactsMod.MOD_ID);
     public static final RegistryObject<Item> FORGOTTEN_HELM = ITEMS.register("forgotten_helm",
-            () -> new AItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.HEAD, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
+            () -> new ForgottenHelm(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.HEAD, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
     public static final RegistryObject<Item> FORGOTTEN_CHEST = ITEMS.register("forgotten_chest",
-            () -> new BItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.CHEST, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
+            () -> new ForgottenChestplate(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.CHEST, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
     public static final RegistryObject<Item> FORGOTTEN_LEGS = ITEMS.register("forgotten_legs",
-            () ->  new CItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.LEGS, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
+            () ->  new ForgottenLeggings(AncientArtifactsMaterial.ANCIENT_ARTIFACT, EquipmentSlot.LEGS, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
     public static final RegistryObject<Item> FORGOTTEN_BOOTS = ITEMS.register("forgotten_boots",
-            () -> new DItem(AncientArtifactsMaterial.ANCIENT_ARTIFACT_BOOTS, EquipmentSlot.FEET, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
+            () -> new ForgottenBoots(AncientArtifactsMaterial.ANCIENT_ARTIFACT_BOOTS, EquipmentSlot.FEET, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
     public static final RegistryObject<Item> FORGOTTEN_SWORD = ITEMS.register("forgotten_sword",
-            () -> new EItem(AncientArtifactsTier.ANCIENT_ARTIFACT, 3, -2.4F, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
-    public static final RegistryObject<Item> FORGOTTEN_BOW = ITEMS.register("forgotten_bow", () -> new FItem(new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
+            () -> new ForgottenSword(AncientArtifactsTier.ANCIENT_ARTIFACT, 3, -2.4F, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
+    public static final RegistryObject<Item> FORGOTTEN_BOW = ITEMS.register("forgotten_bow", () -> new ForgottenBow(new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
     public static final RegistryObject<Item> FORGOTTEN_SHIELD = ITEMS.register("forgotten_shield",
-            () -> new GItem(new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
+            () -> new ForgottenShield(new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
 
     public static class ArtifactsTab extends CreativeModeTab {
 

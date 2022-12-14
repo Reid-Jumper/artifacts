@@ -3,15 +3,14 @@ package com.reed.artifacts.items;
 import com.reed.artifacts.ArtifactsMod;
 import com.reed.artifacts.util.ArtifactType;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
 
-public class EItem extends SwordItem implements IArtifactItem {
+public class ForgottenBow extends BowItem implements IArtifactItem {
     private ArtifactType artifactType;
-    public EItem(Tier tier, int strength, float speed, Item.Properties prop) {
-        super(tier, strength, speed, prop);
-        artifactType = ArtifactType.E;
+    public ForgottenBow(Item.Properties prop) {
+        super(prop);
+        artifactType = ArtifactType.F;
     }
 
     @Override
@@ -22,8 +21,8 @@ public class EItem extends SwordItem implements IArtifactItem {
     @Override
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
-        if(item instanceof EItem) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.E);
+        if(item instanceof ForgottenBow) {
+            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.F);
         }
     }
 }
