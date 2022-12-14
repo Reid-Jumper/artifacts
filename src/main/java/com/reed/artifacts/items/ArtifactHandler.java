@@ -37,38 +37,38 @@ public class ArtifactHandler {
     }
     public boolean checkOpenArtifact(IArtifactItem item) {
         switch (item.getArtifactType()) {
-            case A:
+            case FORGOTTEN_HELM:
                 return a_item == null;
-            case B:
+            case FORGOTTEN_CHEST:
                 return b_item == null;
-            case C:
+            case FORGOTTEN_LEGS:
                 return c_item == null;
-            case D:
+            case FORGOTTEN_BOOTS:
                 return d_item == null;
-            case E:
+            case FORGOTTEN_SWORD:
                 return e_item == null;
-            case F:
+            case FORGOTTEN_BOW:
                 return f_item == null;
-            case G:
+            case FORGOTTEN_SHIELD:
                 return g_item == null;
             default:
                 return false;
         }
     }public boolean checkOpenArtifact(ArtifactType type) {
         switch (type) {
-            case A:
+            case FORGOTTEN_HELM:
                 return a_item == null;
-            case B:
+            case FORGOTTEN_CHEST:
                 return b_item == null;
-            case C:
+            case FORGOTTEN_LEGS:
                 return c_item == null;
-            case D:
+            case FORGOTTEN_BOOTS:
                 return d_item == null;
-            case E:
+            case FORGOTTEN_SWORD:
                 return e_item == null;
-            case F:
+            case FORGOTTEN_BOW:
                 return f_item == null;
-            case G:
+            case FORGOTTEN_SHIELD:
                 return g_item == null;
             default:
                 return false;
@@ -76,67 +76,67 @@ public class ArtifactHandler {
     }
     public void putArtifact(IArtifactItem item, ArtifactType type) {
         switch (type) {
-            case A:
+            case FORGOTTEN_HELM:
                 a_item = (ForgottenHelm)item;
                 break;
-            case B:
+            case FORGOTTEN_CHEST:
                 b_item = (ForgottenChestplate)item;
                 break;
-            case C:
+            case FORGOTTEN_LEGS:
                 c_item = (ForgottenLeggings)item;
                 break;
-            case D:
+            case FORGOTTEN_BOOTS:
                 d_item = (ForgottenBoots)item;
                 break;
-            case E:
+            case FORGOTTEN_SWORD:
                 e_item = (ForgottenSword)item;
                 break;
-            case F:
+            case FORGOTTEN_BOW:
                 f_item = (ForgottenBow)item;
                 break;
-            case G:
+            case FORGOTTEN_SHIELD:
                 g_item = (ForgottenShield)item;
                 break;
         }
     }
     public void clearArtifact(ArtifactType type) {
         switch (type) {
-            case A:
+            case FORGOTTEN_HELM:
                 a_item = null;
                 break;
-            case B:
+            case FORGOTTEN_CHEST:
                 b_item = null;
                 break;
-            case C:
+            case FORGOTTEN_LEGS:
                 c_item = null;
                 break;
-            case D:
+            case FORGOTTEN_BOOTS:
                 d_item = null;
                 break;
-            case E:
+            case FORGOTTEN_SWORD:
                 e_item = null;
                 break;
-            case F:
+            case FORGOTTEN_BOW:
                 f_item = null;
                 break;
-            case G:
+            case FORGOTTEN_SHIELD:
                 g_item = null;
                 break;
         }
     }
     public IArtifactItem getArtifact(ArtifactType type) {
         switch (type) {
-            case A:
+            case FORGOTTEN_HELM:
                 return a_item;
-            case B:
+            case FORGOTTEN_CHEST:
                 return b_item;
-            case C:
+            case FORGOTTEN_LEGS:
                 return c_item;
-            case D:
+            case FORGOTTEN_BOOTS:
                 return d_item;
-            case E:
+            case FORGOTTEN_SWORD:
                 return e_item;
-            case F:
+            case FORGOTTEN_BOW:
                 return f_item;
             default:
                 return g_item;
@@ -144,25 +144,25 @@ public class ArtifactHandler {
     }
     public void tick(ArtifactType type) {
         switch (type) {
-            case A:
+            case FORGOTTEN_HELM:
                 a_tracker.tickDown();
                 break;
-            case B:
+            case FORGOTTEN_CHEST:
                 b_tracker.tickDown();
                 break;
-            case C:
+            case FORGOTTEN_LEGS:
                 c_tracker.tickDown();
                 break;
-            case D:
+            case FORGOTTEN_BOOTS:
                 d_tracker.tickDown();
                 break;
-            case E:
+            case FORGOTTEN_SWORD:
                 e_tracker.tickDown();
                 break;
-            case F:
+            case FORGOTTEN_BOW:
                 f_tracker.tickDown();
                 break;
-            case G:
+            case FORGOTTEN_SHIELD:
                 g_tracker.tickDown();
                 break;
         }

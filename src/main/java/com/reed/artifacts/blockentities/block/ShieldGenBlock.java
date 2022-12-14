@@ -1,6 +1,6 @@
 package com.reed.artifacts.blockentities.block;
 
-import com.reed.artifacts.blockentities.entity.FGenTile;
+import com.reed.artifacts.blockentities.entity.ShieldGenTile;
 import com.reed.artifacts.init.TileEntityInit;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -14,20 +14,20 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 
-public class FGenBlock extends Block implements EntityBlock {
-    public FGenBlock(BlockBehaviour.Properties props) {
+public class ShieldGenBlock extends Block implements EntityBlock {
+    public ShieldGenBlock(BlockBehaviour.Properties props) {
         super(props);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return TileEntityInit.F_GEN_BLOCK.get().create(pos, state);
+        return TileEntityInit.SHIELD_GEN_BLOCK.get().create(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return type == TileEntityInit.F_GEN_BLOCK.get() ? FGenTile::tick : null;
+        return type == TileEntityInit.SHIELD_GEN_BLOCK.get() ? ShieldGenTile::tick : null;
     }
 }

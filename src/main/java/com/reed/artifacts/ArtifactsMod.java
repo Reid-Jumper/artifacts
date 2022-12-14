@@ -10,7 +10,6 @@ import com.reed.artifacts.util.ArtifactType;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -128,9 +127,9 @@ public class ArtifactsMod
         } else if (!server.overworld().isNight() && !server.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             server.getPlayerList().broadcastMessage(new TextComponent("Day has arrived. A weight has lifted..."), ChatType.SYSTEM, Util.NIL_UUID);
             server.getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).set(true, server);
-            if(!HANDLER.checkOpenArtifact(ArtifactType.B)) {
-                ((ForgottenChestplate)HANDLER.getArtifact(ArtifactType.B)).setFireResCharge(true);
-                ((ForgottenChestplate)HANDLER.getArtifact(ArtifactType.B)).setBreathCharge(true);
+            if(!HANDLER.checkOpenArtifact(ArtifactType.FORGOTTEN_CHEST)) {
+                ((ForgottenChestplate)HANDLER.getArtifact(ArtifactType.FORGOTTEN_CHEST)).setFireResCharge(true);
+                ((ForgottenChestplate)HANDLER.getArtifact(ArtifactType.FORGOTTEN_CHEST)).setBreathCharge(true);
             }
         }
         server.getPlayerList().getPlayers().forEach((player) -> {

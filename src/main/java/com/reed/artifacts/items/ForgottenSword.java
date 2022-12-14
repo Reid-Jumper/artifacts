@@ -11,7 +11,7 @@ public class ForgottenSword extends SwordItem implements IArtifactItem {
     private ArtifactType artifactType;
     public ForgottenSword(Tier tier, int strength, float speed, Item.Properties prop) {
         super(tier, strength, speed, prop);
-        artifactType = ArtifactType.E;
+        artifactType = ArtifactType.FORGOTTEN_SWORD;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class ForgottenSword extends SwordItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenSword) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.E);
+            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.FORGOTTEN_SWORD);
         }
     }
 }

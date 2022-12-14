@@ -17,7 +17,7 @@ public class ForgottenHelm extends ArmorItem implements IArtifactItem {
     private ArtifactType artifactType;
     public ForgottenHelm(ArmorMaterial material, EquipmentSlot slot, Item.Properties prop) {
         super(material, slot, prop);
-        artifactType = ArtifactType.A;
+        artifactType = ArtifactType.FORGOTTEN_HELM;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class ForgottenHelm extends ArmorItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenHelm) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.A);
+            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.FORGOTTEN_HELM);
         }
     }
 

@@ -1,5 +1,5 @@
 {
-  "parent": "artifacts:block/a_gen_block",
+  "parent": "block/cube_all",
   "textures": {
     "down": "artifacts:g",
     "up": "artifacts:g",

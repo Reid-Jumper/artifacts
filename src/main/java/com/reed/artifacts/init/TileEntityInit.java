@@ -9,18 +9,18 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class TileEntityInit {
     public static final DeferredRegister<BlockEntityType<?>> TILE_ENTITY_TYPES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, ArtifactsMod.MOD_ID);
-    public static final RegistryObject<BlockEntityType<AGenTile>> A_GEN_BLOCK = TILE_ENTITY_TYPES.register("a_gen_block",
-            () -> BlockEntityType.Builder.of(AGenTile::new, BlockInit.A_GEN_BLOCK.get()).build(null));
-    public static final RegistryObject<BlockEntityType<BGenTile>> B_GEN_BLOCK = TILE_ENTITY_TYPES.register("b_gen_block",
-            () -> BlockEntityType.Builder.of(BGenTile::new, BlockInit.B_GEN_BLOCK.get()).build(null));
-    public static final RegistryObject<BlockEntityType<CGenTile>> C_GEN_BLOCK = TILE_ENTITY_TYPES.register("c_gen_block",
-            () -> BlockEntityType.Builder.of(CGenTile::new, BlockInit.C_GEN_BLOCK.get()).build(null));
-    public static final RegistryObject<BlockEntityType<DGenTile>> D_GEN_BLOCK = TILE_ENTITY_TYPES.register("d_gen_block",
-            () -> BlockEntityType.Builder.of(DGenTile::new, BlockInit.D_GEN_BLOCK.get()).build(null));
-    public static final RegistryObject<BlockEntityType<EGenTile>> E_GEN_BLOCK = TILE_ENTITY_TYPES.register("e_gen_block",
-            () -> BlockEntityType.Builder.of(EGenTile::new, BlockInit.E_GEN_BLOCK.get()).build(null));
-    public static final RegistryObject<BlockEntityType<FGenTile>> F_GEN_BLOCK = TILE_ENTITY_TYPES.register("f_gen_block",
-            () -> BlockEntityType.Builder.of(FGenTile::new, BlockInit.F_GEN_BLOCK.get()).build(null));
-    public static final RegistryObject<BlockEntityType<GGenTile>> G_GEN_BLOCK = TILE_ENTITY_TYPES.register("g_gen_block",
-            () -> BlockEntityType.Builder.of(GGenTile::new, BlockInit.G_GEN_BLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<HelmGenTile>> HELM_GEN_BLOCK = TILE_ENTITY_TYPES.register("helm_gen_block",
+            () -> BlockEntityType.Builder.of(HelmGenTile::new, BlockInit.HELM_GEN_BLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<ChestGenTile>> CHEST_GEN_BLOCK = TILE_ENTITY_TYPES.register("chest_gen_block",
+            () -> BlockEntityType.Builder.of(ChestGenTile::new, BlockInit.CHEST_GEN_BLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<LegsGenTile>> LEGS_GEN_BLOCK = TILE_ENTITY_TYPES.register("legs_gen_block",
+            () -> BlockEntityType.Builder.of(LegsGenTile::new, BlockInit.LEGS_GEN_BLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<BootsGenTile>> BOOTS_GEN_BLOCK = TILE_ENTITY_TYPES.register("boots_gen_block",
+            () -> BlockEntityType.Builder.of(BootsGenTile::new, BlockInit.BOOTS_GEN_BLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<SwordGenTile>> SWORD_GEN_BLOCK = TILE_ENTITY_TYPES.register("sword_gen_block",
+            () -> BlockEntityType.Builder.of(SwordGenTile::new, BlockInit.SWORD_GEN_BLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<BowGenTile>> BOW_GEN_BLOCK = TILE_ENTITY_TYPES.register("bow_gen_block",
+            () -> BlockEntityType.Builder.of(BowGenTile::new, BlockInit.BOW_GEN_BLOCK.get()).build(null));
+    public static final RegistryObject<BlockEntityType<ShieldGenTile>> SHIELD_GEN_BLOCK = TILE_ENTITY_TYPES.register("shield_gen_block",
+            () -> BlockEntityType.Builder.of(ShieldGenTile::new, BlockInit.SHIELD_GEN_BLOCK.get()).build(null));
 }

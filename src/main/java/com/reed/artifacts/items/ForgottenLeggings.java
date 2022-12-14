@@ -13,7 +13,7 @@ public class ForgottenLeggings extends ArmorItem implements IArtifactItem {
     private ArtifactType artifactType;
     public ForgottenLeggings(ArmorMaterial material, EquipmentSlot slot, Item.Properties prop) {
         super(material, slot, prop);
-        artifactType = ArtifactType.C;
+        artifactType = ArtifactType.FORGOTTEN_LEGS;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class ForgottenLeggings extends ArmorItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenLeggings) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.C);
+            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.FORGOTTEN_LEGS);
         }
     }
 }

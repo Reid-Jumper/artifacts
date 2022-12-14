@@ -10,7 +10,7 @@ public class ForgottenShield extends ShieldItem implements IArtifactItem {
     private ArtifactType artifactType;
     public ForgottenShield(Item.Properties prop) {
         super(prop);
-        artifactType = ArtifactType.G;
+        artifactType = ArtifactType.FORGOTTEN_SHIELD;
     }
 
     @Override
@@ -22,7 +22,7 @@ public class ForgottenShield extends ShieldItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenShield) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.G);
+            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.FORGOTTEN_SHIELD);
         }
     }
 }

@@ -16,7 +16,7 @@ public class ForgottenChestplate extends ArmorItem implements IArtifactItem {
 
     public ForgottenChestplate(ArmorMaterial material, EquipmentSlot slot, Item.Properties prop) {
         super(material, slot, prop);
-        artifactType = ArtifactType.B;
+        artifactType = ArtifactType.FORGOTTEN_CHEST;
         breathCharge = true;
         fireResCharge = true;
     }
@@ -30,7 +30,7 @@ public class ForgottenChestplate extends ArmorItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenChestplate) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.B);
+            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.FORGOTTEN_CHEST);
         }
     }
     public boolean getFireResCharge() {

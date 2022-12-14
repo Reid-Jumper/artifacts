@@ -1,7 +1,7 @@
 package com.reed.artifacts.blockentities.block;
 
+import com.reed.artifacts.blockentities.entity.BowGenTile;
 import com.reed.artifacts.init.TileEntityInit;
-import com.reed.artifacts.blockentities.entity.BGenTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -14,20 +14,20 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 
-public class BGenBlock extends Block implements EntityBlock {
-    public BGenBlock(BlockBehaviour.Properties props) {
+public class BowGenBlock extends Block implements EntityBlock {
+    public BowGenBlock(BlockBehaviour.Properties props) {
         super(props);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return TileEntityInit.B_GEN_BLOCK.get().create(pos, state);
+        return TileEntityInit.BOW_GEN_BLOCK.get().create(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return type == TileEntityInit.B_GEN_BLOCK.get() ? BGenTile::tick : null;
+        return type == TileEntityInit.BOW_GEN_BLOCK.get() ? BowGenTile::tick : null;
     }
 }

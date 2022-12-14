@@ -1,7 +1,7 @@
 package com.reed.artifacts.blockentities.block;
 
 import com.reed.artifacts.init.TileEntityInit;
-import com.reed.artifacts.blockentities.entity.CGenTile;
+import com.reed.artifacts.blockentities.entity.ChestGenTile;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -14,20 +14,20 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.Nullable;
 
-public class CGenBlock extends Block implements EntityBlock {
-    public CGenBlock(BlockBehaviour.Properties props) {
+public class ChestGenBlock extends Block implements EntityBlock {
+    public ChestGenBlock(BlockBehaviour.Properties props) {
         super(props);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return TileEntityInit.C_GEN_BLOCK.get().create(pos, state);
+        return TileEntityInit.CHEST_GEN_BLOCK.get().create(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return type == TileEntityInit.C_GEN_BLOCK.get() ? CGenTile::tick : null;
+        return type == TileEntityInit.CHEST_GEN_BLOCK.get() ? ChestGenTile::tick : null;
     }
 }

@@ -10,7 +10,7 @@ public class ForgottenBow extends BowItem implements IArtifactItem {
     private ArtifactType artifactType;
     public ForgottenBow(Item.Properties prop) {
         super(prop);
-        artifactType = ArtifactType.F;
+        artifactType = ArtifactType.FORGOTTEN_BOW;
     }
 
     @Override
@@ -22,7 +22,7 @@ public class ForgottenBow extends BowItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenBow) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.F);
+            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.FORGOTTEN_BOW);
         }
     }
 }
