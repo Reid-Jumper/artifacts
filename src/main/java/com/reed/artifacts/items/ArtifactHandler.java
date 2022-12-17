@@ -178,26 +178,26 @@ public class ArtifactHandler {
 
     public ArtifactTrackerTicker updateItemStack(ItemStack stack, ArtifactType type) {
         switch (type) {
-            case A:
+            case FORGOTTEN_HELM:
                 artifactItems.set(0, stack);
                 System.out.println(artifactTrackers.get(0) + ": A");
                 return artifactTrackers.get(0);
-            case B:
+            case FORGOTTEN_CHEST:
                 artifactItems.set(1, stack);
                 return artifactTrackers.get(1);
-            case C:
+            case FORGOTTEN_LEGS:
                 artifactItems.set(2, stack);
                 return artifactTrackers.get(2);
-            case D:
+            case FORGOTTEN_BOOTS:
                 artifactItems.set(3, stack);
                 return artifactTrackers.get(3);
-            case E:
+            case FORGOTTEN_SWORD:
                 artifactItems.set(4, stack);
                 return artifactTrackers.get(4);
-            case F:
+            case FORGOTTEN_BOW:
                 artifactItems.set(5, stack);
                 return artifactTrackers.get(5);
-            case G:
+            case FORGOTTEN_SHIELD:
                 artifactItems.set(6, stack);
                 return artifactTrackers.get(6);
             default:
@@ -221,25 +221,25 @@ public class ArtifactHandler {
     }
     public void clearPossession(ArtifactType type) {
         switch(type) {
-            case A:
+            case FORGOTTEN_HELM:
                 artifactTrackers.get(0).clearPossession();
                 break;
-            case B:
+            case FORGOTTEN_CHEST:
                 artifactTrackers.get(1).clearPossession();
                 break;
-            case C:
+            case FORGOTTEN_LEGS:
                 artifactTrackers.get(2).clearPossession();
                 break;
-            case D:
+            case FORGOTTEN_BOOTS:
                 artifactTrackers.get(3).clearPossession();
                 break;
-            case E:
+            case FORGOTTEN_SWORD:
                 artifactTrackers.get(4).clearPossession();
                 break;
-            case F:
+            case FORGOTTEN_BOW:
                 artifactTrackers.get(5).clearPossession();
                 break;
-            case G:
+            case FORGOTTEN_SHIELD:
                 artifactTrackers.get(6).clearPossession();
                 break;
         }

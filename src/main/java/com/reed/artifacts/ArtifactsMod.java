@@ -190,11 +190,11 @@ public class ArtifactsMod
     @SubscribeEvent
     public void onItemPickup(PlayerEvent.ItemPickupEvent event) {
         System.out.println("Event fired");
-        System.out.println(HANDLER.getArtifact(ArtifactType.A));
+        System.out.println(HANDLER.getArtifact(ArtifactType.FORGOTTEN_HELM));
         if(event.getStack().getItem() instanceof IArtifactItem) {
             HANDLER.updateItemStack(event.getStack(), ((IArtifactItem)event.getStack().getItem()).getArtifactType()).changePossession(event.getPlayer());
         }
-        System.out.println(HANDLER.getArtifact(ArtifactType.A));
+        System.out.println(HANDLER.getArtifact(ArtifactType.FORGOTTEN_HELM));
     }
     @SubscribeEvent
     public void onPlayerContainerEvent(PlayerContainerEvent.Close event) {
