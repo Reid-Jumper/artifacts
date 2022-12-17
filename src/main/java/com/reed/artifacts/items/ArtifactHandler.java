@@ -33,19 +33,19 @@ public class ArtifactHandler {
     }
     public boolean checkOpenArtifact(ArtifactType type) {
         switch (type) {
-            case A:
+            case FORGOTTEN_HELM:
                 return artifactItems.get(0) == null;
-            case B:
+            case FORGOTTEN_CHEST:
                 return artifactItems.get(1) == null;
-            case C:
+            case FORGOTTEN_LEGS:
                 return artifactItems.get(2) == null;
-            case D:
+            case FORGOTTEN_BOOTS:
                 return artifactItems.get(3) == null;
-            case E:
+            case FORGOTTEN_SWORD:
                 return artifactItems.get(4) == null;
-            case F:
+            case FORGOTTEN_BOW:
                 return artifactItems.get(5) == null;
-            case G:
+            case FORGOTTEN_SHIELD:
                 return artifactItems.get(6) == null;
             default:
                 return false;
@@ -53,31 +53,31 @@ public class ArtifactHandler {
     }
     public void putArtifact(ItemStack item, ArtifactType type) {
         switch (type) {
-            case A:
+            case FORGOTTEN_HELM:
                 artifactItems.set(0, item);
                 artifactTrackers.set(0, new ArtifactTrackerTicker((IArtifactItem)item.getItem()));
                 break;
-            case B:
+            case FORGOTTEN_CHEST:
                 artifactItems.set(1, item);
                 artifactTrackers.set(1, new ArtifactTrackerTicker((IArtifactItem)item.getItem()));
                 break;
-            case C:
+            case FORGOTTEN_LEGS:
                 artifactItems.set(2, item);
                 artifactTrackers.set(2, new ArtifactTrackerTicker((IArtifactItem)item.getItem()));
                 break;
-            case D:
+            case FORGOTTEN_BOOTS:
                 artifactItems.set(3, item);
                 artifactTrackers.set(3, new ArtifactTrackerTicker((IArtifactItem)item.getItem()));
                 break;
-            case E:
+            case FORGOTTEN_SWORD:
                 artifactItems.set(4, item);
                 artifactTrackers.set(4, new ArtifactTrackerTicker((IArtifactItem)item.getItem()));
                 break;
-            case F:
+            case FORGOTTEN_BOW:
                 artifactItems.set(5, item);
                 artifactTrackers.set(5, new ArtifactTrackerTicker((IArtifactItem)item.getItem()));
                 break;
-            case G:
+            case FORGOTTEN_SHIELD:
                 artifactItems.set(6, item);
                 artifactTrackers.set(6, new ArtifactTrackerTicker((IArtifactItem)item.getItem()));
                 break;
@@ -85,31 +85,31 @@ public class ArtifactHandler {
     }
     public void clearArtifact(ArtifactType type) {
         switch (type) {
-            case A:
+            case FORGOTTEN_HELM:
                 artifactItems.set(0, null);
                 artifactTrackers.set(0, new ArtifactTrackerTicker());
                 break;
-            case B:
+            case FORGOTTEN_CHEST:
                 artifactItems.set(1, null);
                 artifactTrackers.set(1, new ArtifactTrackerTicker());
                 break;
-            case C:
+            case FORGOTTEN_LEGS:
                 artifactItems.set(2, null);
                 artifactTrackers.set(2, new ArtifactTrackerTicker());
                 break;
-            case D:
+            case FORGOTTEN_BOOTS:
                 artifactItems.set(3, null);
                 artifactTrackers.set(3, new ArtifactTrackerTicker());
                 break;
-            case E:
+            case FORGOTTEN_SWORD:
                 artifactItems.set(4, null);
                 artifactTrackers.set(4, new ArtifactTrackerTicker());
                 break;
-            case F:
+            case FORGOTTEN_BOW:
                 artifactItems.set(5, null);
                 artifactTrackers.set(5, new ArtifactTrackerTicker());
                 break;
-            case G:
+            case FORGOTTEN_SHIELD:
                 artifactItems.set(6, null);
                 artifactTrackers.set(6, new ArtifactTrackerTicker());
                 break;
@@ -117,17 +117,17 @@ public class ArtifactHandler {
     }
     public ItemStack getArtifact(ArtifactType type) {
         switch (type) {
-            case A:
+            case FORGOTTEN_HELM:
                 return artifactItems.get(0);
-            case B:
+            case FORGOTTEN_CHEST:
                 return artifactItems.get(1);
-            case C:
+            case FORGOTTEN_LEGS:
                 return artifactItems.get(2);
-            case D:
+            case FORGOTTEN_BOOTS:
                 return artifactItems.get(3);
-            case E:
+            case FORGOTTEN_SWORD:
                 return artifactItems.get(4);
-            case F:
+            case FORGOTTEN_BOW:
                 return artifactItems.get(5);
             default:
                 return artifactItems.get(6);
@@ -136,25 +136,25 @@ public class ArtifactHandler {
     /*
     public void tick(ArtifactType type) {
         switch (type) {
-            case A:
+            case FORGOTTEN_HELM:
                 artifactTrackers.get(0).tickDown();
                 break;
-            case B:
+            case FORGOTTEN_CHEST:
                 artifactTrackers.get(1).tickDown();
                 break;
-            case C:
+            case FORGOTTEN_LEGS:
                 artifactTrackers.get(2).tickDown();
                 break;
-            case D:
+            case FORGOTTEN_BOOTS:
                 artifactTrackers.get(3).tickDown();
                 break;
-            case E:
+            case FORGOTTEN_SWORD:
                 artifactTrackers.get(4).tickDown();
                 break;
-            case F:
+            case FORGOTTEN_BOW:
                 artifactTrackers.get(5).tickDown();
                 break;
-            case G:
+            case FORGOTTEN_SHIELD:
                 artifactTrackers.get(6).tickDown();
                 break;
         }

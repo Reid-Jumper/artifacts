@@ -4,6 +4,6 @@ import com.reed.artifacts.util.ArtifactType;
 import net.minecraft.world.level.ItemLike;
 
 public interface IArtifactItem extends ItemLike {
-    ArtifactType artifactType = ArtifactType.A;
+    ArtifactType artifactType = ArtifactType.FORGOTTEN_HELM;
     ArtifactType getArtifactType();
 }

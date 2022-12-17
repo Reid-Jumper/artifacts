@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "artifacts:block/chest_gen_block"
+    }
+  }
+}

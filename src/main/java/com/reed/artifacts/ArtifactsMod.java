@@ -7,16 +7,11 @@ import com.reed.artifacts.init.ItemInit;
 import com.reed.artifacts.init.TileEntityInit;
 import com.reed.artifacts.items.*;
 import com.reed.artifacts.util.ArtifactType;
-import net.minecraft.commands.arguments.CompoundTagArgument;
-import net.minecraft.commands.arguments.EntitySummonArgument;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.protocol.game.ClientboundEntityEventPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -137,16 +132,16 @@ public class ArtifactsMod
         } else if (!server.overworld().isNight() && !server.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             server.getPlayerList().broadcastMessage(new TextComponent("Day has arrived. A weight has lifted..."), ChatType.SYSTEM, Util.NIL_UUID);
             server.getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).set(true, server);
-            if(!HANDLER.checkOpenArtifact(ArtifactType.B)) {
-                ((BItem)HANDLER.getArtifact(ArtifactType.B).getItem()).setFireResCharge(true);
-                ((BItem)HANDLER.getArtifact(ArtifactType.B).getItem()).setBreathCharge(true);
+            if(!HANDLER.checkOpenArtifact(ArtifactType.FORGOTTEN_CHEST)) {
+                ((ForgottenChestplate)HANDLER.getArtifact(ArtifactType.FORGOTTEN_CHEST).getItem()).setFireResCharge(true);
+                ((ForgottenChestplate)HANDLER.getArtifact(ArtifactType.FORGOTTEN_CHEST).getItem()).setBreathCharge(true);
             }
         }
         server.getPlayerList().getPlayers().forEach((player) -> {
-            if(player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof AItem) {
+            if(player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof ForgottenHelm) {
                 player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 399, 0, true, true));
             }
-            if(player.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof CItem) {
+            if(player.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof ForgottenLeggings) {
                 if(server.overworld().isNight()) {
                     player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 399, 0, true, true));
                 } else {
@@ -159,20 +154,20 @@ public class ArtifactsMod
     @SubscribeEvent
     public void onEntityDamaged(LivingDamageEvent event) {
         LivingEntity entity = event.getEntityLiving();
-        if(entity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof BItem && !entity.getLevel().isClientSide()) {
+        if(entity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ForgottenChestplate && !entity.getLevel().isClientSide()) {
             if(event.getSource() instanceof EntityDamageSource) {
                 event.getSource().getEntity().setSecondsOnFire(20);
-            }else if(event.getSource().isFire() && ((BItem)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).getFireResCharge() == true) {
+            }else if(event.getSource().isFire() && ((ForgottenChestplate)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).getFireResCharge() == true) {
                 event.setCanceled(true);
                 event.getEntityLiving().addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 6000, 0 , false, true));
-                ((BItem)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).setFireResCharge(false);
-            }else if(event.getSource().equals(DamageSource.DROWN) && ((BItem)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).getBreathCharge() == true) {
+                ((ForgottenChestplate)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).setFireResCharge(false);
+            }else if(event.getSource().equals(DamageSource.DROWN) && ((ForgottenChestplate)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).getBreathCharge() == true) {
                 event.setCanceled(true);
                 event.getEntityLiving().addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 6000, 0, false, true));
-                ((BItem)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).setBreathCharge(false);
+                ((ForgottenChestplate)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).setBreathCharge(false);
             }
         }
-        if(entity.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof DItem && !entity.getLevel().isClientSide()) {
+        if(entity.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof ForgottenBoots && !entity.getLevel().isClientSide()) {
             if(event.getSource().isFall()) {
                 event.setCanceled(true);
             }

@@ -13,10 +13,10 @@ import java.util.function.Supplier;
 
 public enum AncientArtifactsMaterial implements ArmorMaterial {
     ANCIENT_ARTIFACT(ArtifactsMod.MOD_ID + ":ancient_artifacts", 20, new int[]{7, 15, 20, 8}, 50, SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0F, 0.1F, () -> {
-        return Ingredient.of(ItemInit.A.get());
+        return Ingredient.of(ItemInit.FORGOTTEN_HELM.get());
     }),
     ANCIENT_ARTIFACT_BOOTS(ArtifactsMod.MOD_ID + ":ancient_artifacts_boots", 20, new int[]{7, 15, 20, 8}, 50, SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0F, 0.5F, () -> {
-        return Ingredient.of(ItemInit.D.get());
+        return Ingredient.of(ItemInit.FORGOTTEN_BOOTS.get());
     });
 
     private static final int[] HEALTH_PER_SLOT = new int[]{13, 15, 16, 11};
