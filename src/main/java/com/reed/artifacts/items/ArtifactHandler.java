@@ -2,6 +2,10 @@ package com.reed.artifacts.items;
 
 import com.reed.artifacts.util.ArtifactTrackerTicker;
 import com.reed.artifacts.util.ArtifactType;
+import net.minecraft.Util;
+import net.minecraft.network.chat.ChatType;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -15,7 +19,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ArtifactHandler {
     private ArrayList<ItemStack> artifactItems;
     private ArrayList<ArtifactTrackerTicker> artifactTrackers;
@@ -27,6 +30,12 @@ public class ArtifactHandler {
             artifactItems.add(null);
             artifactTrackers.add(new ArtifactTrackerTicker());
         }
+    }
+    public ArrayList<ItemStack> getAllArtifactItems() {
+        return artifactItems;
+    }
+    public ArrayList<ArtifactTrackerTicker> getAllArtifactTrackers() {
+        return artifactTrackers;
     }
     public boolean checkOpenArtifact(IArtifactItem item) {
         return checkOpenArtifact(item.getArtifactType());
@@ -166,36 +175,12 @@ public class ArtifactHandler {
     }
 
      */
-    /*
 
-    @SubscribeEvent
-    public void onPlayerContainerEvent(PlayerContainerEvent.Close event) {
-        System.out.println("Container Closed");
-        Set<Item> set = new HashSet<Item>();
-        ArrayList<Integer> indices = new ArrayList<Integer>();
-        for (int i = 0; i < artifactItems.size(); i++) {
-            if (artifactItems.get(i) != null) {
-                set.add((Item)artifactItems.get(i).getItem());
-                indices.add(i);
-            }
-        }
-        Container container = event.getContainer().getSlot(0).container;
-        Player player = event.getPlayer();
-        if(container.hasAnyOf(Collections.unmodifiableSet(set))) {
-            for(int i = 0; i < indices.size(); i++) {
-                artifactTrackers.get(indices.get(i)).checkContainer(container);
-            }
-        }
-        for(int i = 0; i < indices.size(); i++) {
-            artifactTrackers.get(indices.get(i)).checkPlayer(player);
-        }
-    }
-    */
-    /*
     public ArtifactTrackerTicker updateItemStack(ItemStack stack, ArtifactType type) {
         switch (type) {
             case A:
                 artifactItems.set(0, stack);
+                System.out.println(artifactTrackers.get(0) + ": A");
                 return artifactTrackers.get(0);
             case B:
                 artifactItems.set(1, stack);
@@ -219,6 +204,44 @@ public class ArtifactHandler {
                 return null;
         }
     }
-
-     */
+    public void checkAllPossession(MinecraftServer server) {
+        for (int i = 0; i < artifactTrackers.size(); i++) {
+            ArtifactTrackerTicker tracker = artifactTrackers.get(i);
+            if (tracker != null) {
+                if (tracker.possessionRegistered()) {
+                    if (tracker.possessedByEntity() && tracker.getLastEntityInPossession() instanceof Player) {
+                        if (!tracker.checkPlayer((Player)tracker.getLastEntityInPossession())) {
+                            clearArtifact(tracker.getArtifactItem().getArtifactType());
+                            server.getPlayerList().broadcastMessage(new TextComponent("An artifact has been lost to the world..."), ChatType.SYSTEM, Util.NIL_UUID);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public void clearPossession(ArtifactType type) {
+        switch(type) {
+            case A:
+                artifactTrackers.get(0).clearPossession();
+                break;
+            case B:
+                artifactTrackers.get(1).clearPossession();
+                break;
+            case C:
+                artifactTrackers.get(2).clearPossession();
+                break;
+            case D:
+                artifactTrackers.get(3).clearPossession();
+                break;
+            case E:
+                artifactTrackers.get(4).clearPossession();
+                break;
+            case F:
+                artifactTrackers.get(5).clearPossession();
+                break;
+            case G:
+                artifactTrackers.get(6).clearPossession();
+                break;
+        }
+    }
 }

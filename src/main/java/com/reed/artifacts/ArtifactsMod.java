@@ -12,12 +12,15 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
@@ -25,7 +28,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -41,6 +46,10 @@ import org.slf4j.Logger;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -172,16 +181,12 @@ public class ArtifactsMod
                 event.setCanceled(true);
             }
         }
+        HANDLER.checkAllPossession(server);
     }
     @SubscribeEvent
     public void onPlayerDestroyItem(PlayerDestroyItemEvent event) {
-        System.out.println(event);
-        if(event.getOriginal().getItem() instanceof IArtifactItem) {
-            System.out.println("Artifact item broken");
-            HANDLER.clearArtifact(((IArtifactItem)event.getOriginal().getItem()).getArtifactType());
-        }
+        HANDLER.checkAllPossession(server);
     }
-    /*
     @SubscribeEvent
     public void onItemPickup(PlayerEvent.ItemPickupEvent event) {
         System.out.println("Event fired");
@@ -191,7 +196,33 @@ public class ArtifactsMod
         }
         System.out.println(HANDLER.getArtifact(ArtifactType.A));
     }
-    */
+    @SubscribeEvent
+    public void onPlayerContainerEvent(PlayerContainerEvent.Close event) {
+        Set<Item> set = new HashSet<Item>();
+        ArrayList<Integer> indices = new ArrayList<Integer>();
+        for (int i = 0; i < HANDLER.getAllArtifactItems().size(); i++) {
+            if (HANDLER.getAllArtifactItems().get(i) != null) {
+                set.add((Item)HANDLER.getAllArtifactItems().get(i).getItem());
+                indices.add(i);
+            }
+        }
+        Container container = event.getContainer().getSlot(0).container;
+        Player player = event.getPlayer();
+        if(container.hasAnyOf(Collections.unmodifiableSet(set))) {
+            for(int i = 0; i < indices.size(); i++) {
+                HANDLER.getAllArtifactTrackers().get(indices.get(i)).checkContainerAndUpdate(container);
+            }
+        }
+        for(int i = 0; i < indices.size(); i++) {
+            HANDLER.getAllArtifactTrackers().get(indices.get(i)).checkPlayerAndUpdate(player);
+        }
+    }
+    @SubscribeEvent
+    public void onPlayerDropItem(ItemTossEvent event) {
+        if (event.getEntityItem().getItem().getItem() instanceof IArtifactItem) {
+            HANDLER.clearPossession(((IArtifactItem)event.getEntityItem().getItem().getItem()).getArtifactType());
+        }
+    }
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)

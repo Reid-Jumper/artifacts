@@ -65,6 +65,12 @@ public class ArtifactTrackerTicker {
             this.ticks--;
         }
     }
+    public boolean possessionRegistered() {
+        return this.lastEntityInPossession != null || this.lastBlockInPossession != null;
+    }
+    public boolean possessedByEntity() {
+        return this.lastEntityInPossession != null;
+    }
     public void resetTicks() {
         this.ticks = 12096000;
     }
@@ -91,16 +97,28 @@ public class ArtifactTrackerTicker {
         }
         return false;
     }
-    public void checkContainer(Container container) {
-        Set<Item> set = new HashSet<Item>();
-        set.add((Item)artifactItem);
-        if(container.hasAnyOf(Collections.unmodifiableSet(set))) {
+    public void checkContainerAndUpdate(Container container) {
+        if(checkContainer(container)) {
             changePossession(container);
         }
     }
-    public void checkPlayer(Player player) {
-        if(player.getInventory().contains(new ItemStack(artifactItem))) {
+    public void checkPlayerAndUpdate(Player player) {
+        if(checkPlayer(player)) {
             changePossession(player);
         }
+    }
+    public boolean checkContainer(Container container) {
+        Set<Item> set = new HashSet<>();
+        set.add((Item)artifactItem);
+        return container.hasAnyOf(Collections.unmodifiableSet(set));
+    }
+    public boolean checkPlayer(Player player) {
+        return player.getInventory().contains(new ItemStack(artifactItem));
+    }
+    public void clearPossession() {
+        this.lastEntityInPossession = null;
+        this.lastBlockInPossession = null;
+        this.isTickable = false;
+        resetTicks();
     }
 }
