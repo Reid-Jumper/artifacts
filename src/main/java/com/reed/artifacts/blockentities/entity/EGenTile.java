@@ -39,7 +39,7 @@ public class EGenTile extends BlockEntity {
             });
             ServerLevel serverLevel = (ServerLevel)level;
             if(serverLevel.tryAddFreshEntityWithPassengers(entity)) {
-                ArtifactsMod.HANDLER.putArtifact((IArtifactItem)entity.getItem().getItem(), ArtifactType.E);
+                ArtifactsMod.HANDLER.putArtifact(entity.getItem(), ArtifactType.E);
             }
         }
     }

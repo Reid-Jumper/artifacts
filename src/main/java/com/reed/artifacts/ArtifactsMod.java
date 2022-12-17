@@ -23,6 +23,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -30,6 +31,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -108,6 +110,7 @@ public class ArtifactsMod
 
     }
 
+    /*
     @SubscribeEvent
     public void onPlayerLogin(final PlayerEvent.PlayerLoggedInEvent event) throws CommandSyntaxException{
 
@@ -124,6 +127,7 @@ public class ArtifactsMod
         });
         serverLevel.tryAddFreshEntityWithPassengers(entity);
     }
+    */
 
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
@@ -134,8 +138,8 @@ public class ArtifactsMod
             server.getPlayerList().broadcastMessage(new TextComponent("Day has arrived. A weight has lifted..."), ChatType.SYSTEM, Util.NIL_UUID);
             server.getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).set(true, server);
             if(!HANDLER.checkOpenArtifact(ArtifactType.B)) {
-                ((BItem)HANDLER.getArtifact(ArtifactType.B)).setFireResCharge(true);
-                ((BItem)HANDLER.getArtifact(ArtifactType.B)).setBreathCharge(true);
+                ((BItem)HANDLER.getArtifact(ArtifactType.B).getItem()).setFireResCharge(true);
+                ((BItem)HANDLER.getArtifact(ArtifactType.B).getItem()).setBreathCharge(true);
             }
         }
         server.getPlayerList().getPlayers().forEach((player) -> {
@@ -174,39 +178,25 @@ public class ArtifactsMod
             }
         }
     }
-
     @SubscribeEvent
-    public void itemDestoryed(ClientboundEntityEventPacket packet) {
-        switch(packet.getEventId()) {
-            case 47:
-                //Mainhand
-                server.getAllLevels().forEach((level) -> {
-                    LivingEntity entity = (LivingEntity)packet.getEntity(level);
-                    if(entity != null) {
-                        //entity
-                    }
-                });
-                break;
-            case 48:
-                //Offhand
-                break;
-            case 49:
-                //Head
-                break;
-            case 50:
-                //Chest
-                break;
-            case 51:
-                //Legs
-                break;
-            case 52:
-                //Feet
-                break;
-            default:
-                //OtherEvent
-                break;
+    public void onPlayerDestroyItem(PlayerDestroyItemEvent event) {
+        System.out.println(event);
+        if(event.getOriginal().getItem() instanceof IArtifactItem) {
+            System.out.println("Artifact item broken");
+            HANDLER.clearArtifact(((IArtifactItem)event.getOriginal().getItem()).getArtifactType());
         }
     }
+    /*
+    @SubscribeEvent
+    public void onItemPickup(PlayerEvent.ItemPickupEvent event) {
+        System.out.println("Event fired");
+        System.out.println(HANDLER.getArtifact(ArtifactType.A));
+        if(event.getStack().getItem() instanceof IArtifactItem) {
+            HANDLER.updateItemStack(event.getStack(), ((IArtifactItem)event.getStack().getItem()).getArtifactType()).changePossession(event.getPlayer());
+        }
+        System.out.println(HANDLER.getArtifact(ArtifactType.A));
+    }
+    */
 
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
