@@ -1,6 +1,8 @@
 package com.reed.artifacts.util;
 
+import com.reed.artifacts.init.ItemInit;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -27,5 +29,36 @@ public enum ArtifactType implements StringRepresentable {
 
     public static ArtifactType fromString(String value) {
          return Arrays.stream(ArtifactType.values()).filter(artifactType -> artifactType.name().equals(value)).findFirst().get();
+    }
+
+    public static Item getItemForArtifactType(ArtifactType artifactType) {
+        switch (artifactType) {
+            case FORGOTTEN_HELM -> {
+                return ItemInit.FORGOTTEN_HELM.get();
+            }
+            case FORGOTTEN_CHEST -> {
+                return ItemInit.FORGOTTEN_CHEST.get();
+
+            }
+            case FORGOTTEN_LEGS -> {
+                return ItemInit.FORGOTTEN_LEGS.get();
+
+            }
+            case FORGOTTEN_BOOTS -> {
+                return ItemInit.FORGOTTEN_BOOTS.get();
+
+            }
+            case FORGOTTEN_SWORD -> {
+                return ItemInit.FORGOTTEN_SWORD.get();
+
+            }
+            case FORGOTTEN_BOW -> {
+                return ItemInit.FORGOTTEN_BOW.get();
+            }
+            case FORGOTTEN_SHIELD -> {
+                return ItemInit.FORGOTTEN_SHIELD.get();
+            }
+        }
+        return null;
     }
 }

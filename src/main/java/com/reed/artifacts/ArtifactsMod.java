@@ -1,5 +1,6 @@
 package com.reed.artifacts;
 
+import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.logging.LogUtils;
 import com.reed.artifacts.init.BlockInit;
@@ -7,10 +8,17 @@ import com.reed.artifacts.init.ItemInit;
 import com.reed.artifacts.init.TileEntityInit;
 import com.reed.artifacts.items.*;
 import com.reed.artifacts.util.ArtifactType;
+import net.minecraft.advancements.critereon.ItemPredicate;
+import net.minecraft.client.renderer.block.model.ItemOverride;
+import net.minecraft.commands.arguments.item.ItemPredicateArgument;
+import net.minecraft.core.Registry;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tags.TagKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -30,7 +38,9 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -43,13 +53,14 @@ import net.minecraftforge.fml.event.lifecycle.InterModProcessEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.EntityType;
 
+import java.util.List;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -187,6 +198,54 @@ public class ArtifactsMod
     public void onPlayerDestroyItem(PlayerDestroyItemEvent event) {
         HANDLER.checkAllPossession(server);
     }
+
+    @SubscribeEvent
+    public void onPlayerDisconnect(final PlayerEvent.PlayerLoggedOutEvent event) {
+        List<ArtifactType> artifactTypes = ArtifactHandler.getPlayerArtifacts(event.getPlayer());
+        if (!artifactTypes.isEmpty()) {
+            for(ArtifactType artifactType : artifactTypes) {
+                //event.getPlayer().drop(new ItemStack(HANDLER.getArtifact(artifactType).getItem()), true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        LOGGER.info("Hello from player respawn");
+
+        Player player = ((Player)event.getEntityLiving());
+        List<ArtifactType> artifactTypes = ArtifactHandler.getPlayerArtifacts(player);
+        if (!artifactTypes.isEmpty()) {
+            for(ArtifactType artifactType : artifactTypes) {
+                ItemStack artifactItem = new ItemStack(ArtifactType.getItemForArtifactType(artifactType));
+                try {
+                    int itemCount = player.getInventory().clearOrCountMatchingItems(ItemPredicateArgument.itemPredicate().parse(new StringReader(artifactType.resourceLocation)).create(null), -1, player.inventoryMenu.getCraftSlots());
+                } catch (CommandSyntaxException e) {
+                    e.printStackTrace();
+                }
+                player.containerMenu.broadcastChanges();
+                player.inventoryMenu.slotsChanged(player.getInventory());
+
+            }
+        }
+
+    }
+
+
+    @SubscribeEvent
+    public void onLivingDeath(LivingDeathEvent event) {
+        if (event.getEntityLiving() instanceof Player) {
+            Player player = ((Player)event.getEntityLiving());
+            List<ArtifactType> artifactTypes = ArtifactHandler.getPlayerArtifacts(player);
+            if (!artifactTypes.isEmpty()) {
+                for(ArtifactType artifactType : artifactTypes) {
+                    ItemStack artifactItem = new ItemStack(ArtifactType.getItemForArtifactType(artifactType));
+                    player.drop(artifactItem, true, true);
+                }
+            }
+        }
+    }
+
     @SubscribeEvent
     public void onItemPickup(PlayerEvent.ItemPickupEvent event) {
         System.out.println("Event fired");

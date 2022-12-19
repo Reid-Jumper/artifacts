@@ -1,45 +1,93 @@
 package com.reed.artifacts.items;
 
+import com.reed.artifacts.init.ItemInit;
 import com.reed.artifacts.util.ArtifactTrackerTicker;
 import com.reed.artifacts.util.ArtifactType;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 public class ArtifactHandler {
     private ArrayList<ItemStack> artifactItems;
     private ArrayList<ArtifactTrackerTicker> artifactTrackers;
 
+    public static List<ArtifactType> getPlayerArtifacts(Player player) {
+        ArrayList<ArtifactType> results = new ArrayList<>();
+        for (ArtifactType artifactType : ArtifactType.values()) {
+            boolean found = false;
+            switch (artifactType) {
+
+                case FORGOTTEN_HELM -> {
+                    found = player.getInventory().contains(new ItemStack(ItemInit.FORGOTTEN_HELM.get()));
+                    break;
+                }
+                case FORGOTTEN_CHEST -> {
+                    found = player.getInventory().contains(new ItemStack(ItemInit.FORGOTTEN_CHEST.get()));
+                    break;
+                }
+                case FORGOTTEN_LEGS -> {
+                    found = player.getInventory().contains(new ItemStack(ItemInit.FORGOTTEN_LEGS.get()));
+                    break;
+                }
+                case FORGOTTEN_BOOTS -> {
+                    found = player.getInventory().contains(new ItemStack(ItemInit.FORGOTTEN_BOOTS.get()));
+                    break;
+                }
+                case FORGOTTEN_SWORD -> {
+                    found = player.getInventory().contains(new ItemStack(ItemInit.FORGOTTEN_SWORD.get()));
+                    break;
+                }
+                case FORGOTTEN_BOW -> {
+                    found = player.getInventory().contains(new ItemStack(ItemInit.FORGOTTEN_BOW.get()));
+                    break;
+                }
+                case FORGOTTEN_SHIELD -> {
+                    found = player.getInventory().contains(new ItemStack(ItemInit.FORGOTTEN_SHIELD.get()));
+                    break;
+                }
+            }
+            if (found) {
+               results.add(artifactType);
+            }
+        }
+        return results;
+    }
+
     public ArtifactHandler() {
-        artifactItems = new ArrayList<ItemStack>();
-        artifactTrackers = new ArrayList<ArtifactTrackerTicker>();
+        artifactItems = new ArrayList<>();
+        artifactTrackers = new ArrayList<>();
         for(int i = 0; i < 7; i++) {
             artifactItems.add(null);
             artifactTrackers.add(new ArtifactTrackerTicker());
         }
     }
+
     public ArrayList<ItemStack> getAllArtifactItems() {
         return artifactItems;
     }
+
     public ArrayList<ArtifactTrackerTicker> getAllArtifactTrackers() {
         return artifactTrackers;
     }
+
     public boolean checkOpenArtifact(IArtifactItem item) {
         return checkOpenArtifact(item.getArtifactType());
     }
+
     public boolean checkOpenArtifact(ArtifactType type) {
         switch (type) {
             case FORGOTTEN_HELM:
