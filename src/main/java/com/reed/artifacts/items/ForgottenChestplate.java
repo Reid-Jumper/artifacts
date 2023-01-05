@@ -10,13 +10,12 @@ import net.minecraft.world.item.Item;
 
 public class ForgottenChestplate extends ArmorItem implements IArtifactItem {
 
-    private ArtifactType artifactType;
+    private final ArtifactType artifactType = ArtifactType.FORGOTTEN_CHEST;
     private boolean breathCharge;
     private boolean fireResCharge;
 
     public ForgottenChestplate(ArmorMaterial material, EquipmentSlot slot, Item.Properties prop) {
         super(material, slot, prop);
-        artifactType = ArtifactType.FORGOTTEN_CHEST;
         breathCharge = true;
         fireResCharge = true;
     }
@@ -30,7 +29,7 @@ public class ForgottenChestplate extends ArmorItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenChestplate) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.FORGOTTEN_CHEST);
+            ArtifactsMod.HANDLER.clearArtifact(artifactType);
         }
     }
     public boolean getFireResCharge() {

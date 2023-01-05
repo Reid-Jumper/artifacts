@@ -14,10 +14,9 @@ import net.minecraft.world.item.ItemStack;
 
 public class ForgottenHelm extends ArmorItem implements IArtifactItem {
 
-    private ArtifactType artifactType;
+    private final ArtifactType artifactType = ArtifactType.FORGOTTEN_HELM;
     public ForgottenHelm(ArmorMaterial material, EquipmentSlot slot, Item.Properties prop) {
         super(material, slot, prop);
-        artifactType = ArtifactType.FORGOTTEN_HELM;
     }
 
     @Override
@@ -29,7 +28,7 @@ public class ForgottenHelm extends ArmorItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenHelm) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.FORGOTTEN_HELM);
+            ArtifactsMod.HANDLER.clearArtifact(artifactType);
         }
     }
 

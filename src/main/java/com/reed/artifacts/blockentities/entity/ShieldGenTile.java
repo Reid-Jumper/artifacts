@@ -16,7 +16,7 @@ public class ShieldGenTile extends AbstractGenTile {
     public static ArtifactType artifactType = ArtifactType.FORGOTTEN_SHIELD;
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, T be) {
-        if(ArtifactsMod.HANDLER.checkOpenArtifact(artifactType) && !level.isClientSide) {
+        if(ArtifactsMod.HANDLER.artifactSlotOpen(artifactType) && !level.isClientSide) {
             spawnItem(level, be, artifactType.resourceLocation, artifactType);
         }
     }

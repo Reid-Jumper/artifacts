@@ -8,10 +8,9 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 
 public class ForgottenSword extends SwordItem implements IArtifactItem {
-    private ArtifactType artifactType;
+    private final ArtifactType artifactType = ArtifactType.FORGOTTEN_SWORD;
     public ForgottenSword(Tier tier, int strength, float speed, Item.Properties prop) {
         super(tier, strength, speed, prop);
-        artifactType = ArtifactType.FORGOTTEN_SWORD;
     }
 
     @Override
@@ -22,8 +21,8 @@ public class ForgottenSword extends SwordItem implements IArtifactItem {
     @Override
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
-        if(item instanceof ForgottenSword) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.FORGOTTEN_SWORD);
+            if(item instanceof ForgottenSword) {
+            ArtifactsMod.HANDLER.clearArtifact(artifactType);
         }
     }
 }

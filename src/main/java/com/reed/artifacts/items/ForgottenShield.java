@@ -7,10 +7,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ShieldItem;
 
 public class ForgottenShield extends ShieldItem implements IArtifactItem {
-    private ArtifactType artifactType;
+    private final ArtifactType artifactType = ArtifactType.FORGOTTEN_SHIELD;
     public ForgottenShield(Item.Properties prop) {
         super(prop);
-        artifactType = ArtifactType.FORGOTTEN_SHIELD;
     }
 
     @Override
@@ -22,7 +21,7 @@ public class ForgottenShield extends ShieldItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenShield) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.FORGOTTEN_SHIELD);
+            ArtifactsMod.HANDLER.clearArtifact(artifactType);
         }
     }
 }

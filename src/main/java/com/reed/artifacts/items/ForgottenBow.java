@@ -7,10 +7,9 @@ import net.minecraft.world.item.BowItem;
 import net.minecraft.world.item.Item;
 
 public class ForgottenBow extends BowItem implements IArtifactItem {
-    private ArtifactType artifactType;
+    private final ArtifactType artifactType = ArtifactType.FORGOTTEN_BOW;
     public ForgottenBow(Item.Properties prop) {
         super(prop);
-        artifactType = ArtifactType.FORGOTTEN_BOW;
     }
 
     @Override
@@ -22,7 +21,7 @@ public class ForgottenBow extends BowItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenBow) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.FORGOTTEN_BOW);
+            ArtifactsMod.HANDLER.clearArtifact(artifactType);
         }
     }
 }

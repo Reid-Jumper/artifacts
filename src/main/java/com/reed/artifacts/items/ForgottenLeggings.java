@@ -10,10 +10,9 @@ import net.minecraft.world.item.Item;
 
 public class ForgottenLeggings extends ArmorItem implements IArtifactItem {
 
-    private ArtifactType artifactType;
+    private final ArtifactType artifactType = ArtifactType.FORGOTTEN_LEGS;
     public ForgottenLeggings(ArmorMaterial material, EquipmentSlot slot, Item.Properties prop) {
         super(material, slot, prop);
-        artifactType = ArtifactType.FORGOTTEN_LEGS;
     }
 
     @Override
@@ -25,7 +24,7 @@ public class ForgottenLeggings extends ArmorItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenLeggings) {
-            ArtifactsMod.HANDLER.clearArtifact(ArtifactType.FORGOTTEN_LEGS);
+            ArtifactsMod.HANDLER.clearArtifact(artifactType);
         }
     }
 }
