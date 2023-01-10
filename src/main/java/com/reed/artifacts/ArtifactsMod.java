@@ -168,7 +168,7 @@ public class ArtifactsMod
                 event.getSource().getEntity().setSecondsOnFire(20);
             }else if(event.getSource().isFire() && ((ForgottenChestplate)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).getFireResCharge() == true) {
                 event.setCanceled(true);
-                event.getEntityLiving().addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 6000, 0 , false, true));
+                event.getEntityLiving().addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 6000, 0, false, true));
                 ((ForgottenChestplate)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).setFireResCharge(false);
             }else if(event.getSource().equals(DamageSource.DROWN) && ((ForgottenChestplate)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).getBreathCharge() == true) {
                 event.setCanceled(true);
