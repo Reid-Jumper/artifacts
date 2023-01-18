@@ -16,8 +16,10 @@ public class BootsGenTile extends AbstractGenTile {
     public static ArtifactType artifactType = ArtifactType.FORGOTTEN_BOOTS;
 
     public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, T be) {
-        if(ArtifactsMod.ARTIFACT_HANDLER.artifactSlotOpen(artifactType) && !level.isClientSide) {
-            spawnItem(level, be, artifactType.resourceLocation, artifactType);
+        if (!level.isClientSide()) {
+            if (ArtifactsMod.ARTIFACT_HANDLER.artifactSlotOpen(artifactType) && !level.isClientSide) {
+                spawnItem(level, be, artifactType.resourceLocation, artifactType);
+            }
         }
     }
 }

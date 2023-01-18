@@ -25,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
@@ -36,6 +37,7 @@ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.InterModComms;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -116,29 +118,6 @@ public class ArtifactsMod
 
     }
 
-
-    @SubscribeEvent
-    public void onPlayerLogin(final PlayerEvent.PlayerLoggedInEvent event) throws CommandSyntaxException{
-        LOGGER.info("Hello from player login");
-
-        Player player = ((Player)event.getEntityLiving());
-        List<ArtifactType> artifactTypes = ArtifactHandler.getPlayerArtifacts(player);
-        if (!artifactTypes.isEmpty()) {
-            for(ArtifactType artifactType : artifactTypes) {
-                if (!ARTIFACT_HANDLER.hasPossession(player, artifactType)) {
-                    try {
-                        player.getInventory().clearOrCountMatchingItems(ItemPredicateArgument.itemPredicate().parse(new StringReader(artifactType.resourceLocation)).create(null), -1, player.inventoryMenu.getCraftSlots());
-                        LOGGER.warn("Removed illegally possessed item " + artifactType.name() + " from player " + player.getScoreboardName());
-                    } catch (CommandSyntaxException e) {
-                        e.printStackTrace();
-                    }
-                    player.containerMenu.broadcastChanges();
-                    player.inventoryMenu.slotsChanged(player.getInventory());
-                }
-            }
-        }
-    }
-
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
         if (server.overworld().isNight() && server.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
@@ -166,8 +145,90 @@ public class ArtifactsMod
             }
         });
     }
+
+    @SubscribeEvent
+    public void onPlayerLogin(final PlayerEvent.PlayerLoggedInEvent event) {
+        LOGGER.info("Hello from player login");
+
+        Player player = ((Player)event.getEntityLiving());
+        List<ArtifactType> artifactTypes = ArtifactHandler.getPlayerArtifacts(player);
+        if (!artifactTypes.isEmpty()) {
+            for(ArtifactType artifactType : artifactTypes) {
+                if (!ARTIFACT_HANDLER.hasPossession(player, artifactType)) {
+                    try {
+                        player.getInventory().clearOrCountMatchingItems(ItemPredicateArgument.itemPredicate().parse(new StringReader(artifactType.resourceLocation)).create(null), -1, player.inventoryMenu.getCraftSlots());
+                        LOGGER.warn("Removed illegally possessed item " + artifactType.name() + " from player " + player.getScoreboardName());
+                    } catch (CommandSyntaxException e) {
+                        e.printStackTrace();
+                    }
+                    player.containerMenu.broadcastChanges();
+                    player.inventoryMenu.slotsChanged(player.getInventory());
+                }
+            }
+        }
+    }
+
     @SubscribeEvent
     public void onEntityDamaged(LivingDamageEvent event) {
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> handleChestplateAbilityOnEntityDamaged(event));
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> handleBootsAbilityOnEntityDamaged(event));
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> ARTIFACT_HANDLER.checkAllPossession(server));
+    }
+
+    @SubscribeEvent
+    public void onPlayerDestroyItem(PlayerDestroyItemEvent event) {
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> ARTIFACT_HANDLER.checkAllPossession(server));
+    }
+
+    @SubscribeEvent
+    public void onPlayerDisconnect(final PlayerEvent.PlayerLoggedOutEvent event) {
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> recordPlayerLastSeenInfoOnLogout(event));
+    }
+
+    @SubscribeEvent
+    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> removeIllegalArtifactsOnPlayerSpawn(event));
+    }
+
+    @SubscribeEvent
+    public void onLivingDeath(LivingDeathEvent event) {
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> dropArtifactsAndUpdatePossessionOnPlayerDeath(event));
+    }
+
+    @SubscribeEvent
+    public void onItemPickup(PlayerEvent.ItemPickupEvent event) {
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> setPlayerArtifactPossessionOnItemPickup(event));
+    }
+    @SubscribeEvent
+    public void onPlayerContainerEvent(PlayerContainerEvent.Close event) {
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> setPlayerArtifactPossessionOnContainerEvent(event));
+    }
+    @SubscribeEvent
+    public void onPlayerDropItem(ItemTossEvent event) {
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> clearPlayerArtifactPossessionOnDrop(event));
+    }
+
+    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
+    // Event bus for receiving Registry Events)
+    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
+    public static class RegistryEvents
+    {
+        @SubscribeEvent
+        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent) {
+            // Register a new block here
+            LOGGER.info("HELLO from Register Block");
+        }
+    }
+    private void handleBootsAbilityOnEntityDamaged(LivingDamageEvent event) {
+        LivingEntity entity = event.getEntityLiving();
+        if(entity.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof ForgottenBoots && !entity.getLevel().isClientSide()) {
+            if(event.getSource().isFall()) {
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    private void handleChestplateAbilityOnEntityDamaged(LivingDamageEvent event) {
         LivingEntity entity = event.getEntityLiving();
         if(entity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ForgottenChestplate && !entity.getLevel().isClientSide()) {
             if(event.getSource() instanceof EntityDamageSource) {
@@ -182,26 +243,13 @@ public class ArtifactsMod
                 ((ForgottenChestplate)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).setBreathCharge(false);
             }
         }
-        if(entity.getItemBySlot(EquipmentSlot.FEET).getItem() instanceof ForgottenBoots && !entity.getLevel().isClientSide()) {
-            if(event.getSource().isFall()) {
-                event.setCanceled(true);
-            }
-        }
-        LOGGER.info("onEntityDamaged");
-        ARTIFACT_HANDLER.checkAllPossession(server);
-    }
-    @SubscribeEvent
-    public void onPlayerDestroyItem(PlayerDestroyItemEvent event) {
-        LOGGER.info("onPlayerDestroyItem");
-        ARTIFACT_HANDLER.checkAllPossession(server);
     }
 
-    @SubscribeEvent
-    public void onPlayerDisconnect(final PlayerEvent.PlayerLoggedOutEvent event) {
+    private void recordPlayerLastSeenInfoOnLogout(final PlayerEvent.PlayerLoggedOutEvent event) {
+        LOGGER.error("Please implement the recordPlayerLastSeenInfoOnLogout function.");
     }
 
-    @SubscribeEvent
-    public void onPlayerRespawn(PlayerEvent.PlayerRespawnEvent event) {
+    private void removeIllegalArtifactsOnPlayerSpawn(PlayerEvent.PlayerRespawnEvent event) {
         LOGGER.info("Hello from player respawn");
 
         Player player = ((Player)event.getEntityLiving());
@@ -219,9 +267,7 @@ public class ArtifactsMod
         }
     }
 
-
-    @SubscribeEvent
-    public void onLivingDeath(LivingDeathEvent event) {
+    private void dropArtifactsAndUpdatePossessionOnPlayerDeath(LivingDeathEvent event) {
         if (event.getEntityLiving() instanceof Player && server.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             Player player = ((Player)event.getEntityLiving());
             List<ArtifactType> artifactTypes = ArtifactHandler.getPlayerArtifacts(player);
@@ -235,8 +281,7 @@ public class ArtifactsMod
         }
     }
 
-    @SubscribeEvent
-    public void onItemPickup(PlayerEvent.ItemPickupEvent event) {
+    private void setPlayerArtifactPossessionOnItemPickup(PlayerEvent.ItemPickupEvent event) {
         System.out.println("Event fired");
         System.out.println(ARTIFACT_HANDLER.getArtifact(ArtifactType.FORGOTTEN_HELM));
         if(event.getStack().getItem() instanceof IArtifactItem artifactItem) {
@@ -244,40 +289,24 @@ public class ArtifactsMod
         }
         System.out.println(ARTIFACT_HANDLER.getArtifact(ArtifactType.FORGOTTEN_HELM));
     }
-    @SubscribeEvent
-    public void onPlayerContainerEvent(PlayerContainerEvent.Close event) {
-        //
+
+    private void setPlayerArtifactPossessionOnContainerEvent(PlayerContainerEvent.Close event) {
         Set<Item> set = new HashSet<Item>();
-        ArrayList<Integer> indices = new ArrayList<Integer>();
         for (ArtifactType artifactType : ArtifactType.values()) {
             IArtifactItem artifact = ARTIFACT_HANDLER.getArtifact(artifactType);
             if (artifact != null) {
                 set.add(artifact.asItem());
             }
         }
-        Container container = event.getContainer().getSlot(0).container;
         Player player = event.getPlayer();
         for(Item item : set) {
             ARTIFACT_HANDLER.getArtifactTracker(((IArtifactItem)item).getArtifactType()).checkPlayerAndUpdatePossessionStatus(player);
         }
     }
-    @SubscribeEvent
-    public void onPlayerDropItem(ItemTossEvent event) {
+
+    private void clearPlayerArtifactPossessionOnDrop(ItemTossEvent event) {
         if (event.getEntityItem().getItem().getItem() instanceof IArtifactItem artifactItem) {
             ARTIFACT_HANDLER.clearPossession((artifactItem).getArtifactType());
-        }
-    }
-
-    // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
-    // Event bus for receiving Registry Events)
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents
-    {
-        @SubscribeEvent
-        public static void onBlocksRegistry(final RegistryEvent.Register<Block> blockRegistryEvent)
-        {
-            // Register a new block here
-            LOGGER.info("HELLO from Register Block");
         }
     }
 
