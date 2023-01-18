@@ -19,7 +19,6 @@ import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -48,7 +47,6 @@ import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -60,12 +58,13 @@ public class ArtifactsMod
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final String MOD_ID = "artifacts";
-    public static final ArtifactHandler HANDLER = new ArtifactHandler();
+    public static ArtifactHandler ARTIFACT_HANDLER;
+    public ArtifactsModSaveData artifactsModSaveData;
 
     public MinecraftServer server;
 
-    public ArtifactsMod()
-    {
+    public ArtifactsMod() {
+
         final IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         // Register the setup method for modloading
@@ -112,27 +111,33 @@ public class ArtifactsMod
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
         server = event.getServer();
+        artifactsModSaveData = server.overworld().getDataStorage().computeIfAbsent(ArtifactsModSaveData::load, ArtifactsModSaveData::create, ArtifactsModSaveData.ARTIFACTS_MOD_DATA);
+        ARTIFACT_HANDLER = new ArtifactHandler(artifactsModSaveData);
 
     }
 
-    /*
+
     @SubscribeEvent
     public void onPlayerLogin(final PlayerEvent.PlayerLoggedInEvent event) throws CommandSyntaxException{
+        LOGGER.info("Hello from player login");
 
-        CompoundTag compoundtag = new CompoundTag();
-        CompoundTag item = new CompoundTag();
-        item.putString("id", "minecraft:iron_ingot");
-        item.putInt("Count", 7);
-        compoundtag.put("Item", item);
-        compoundtag.putString("id", "minecraft:item");
-        ServerLevel serverLevel = (ServerLevel)event.getPlayer().getLevel();
-        Entity entity = EntityType.loadEntityRecursive(compoundtag, serverLevel, (p_138828_) -> {
-            p_138828_.moveTo(0, 85, 0, p_138828_.getYRot(), p_138828_.getXRot());
-            return p_138828_;
-        });
-        serverLevel.tryAddFreshEntityWithPassengers(entity);
+        Player player = ((Player)event.getEntityLiving());
+        List<ArtifactType> artifactTypes = ArtifactHandler.getPlayerArtifacts(player);
+        if (!artifactTypes.isEmpty()) {
+            for(ArtifactType artifactType : artifactTypes) {
+                if (!ARTIFACT_HANDLER.hasPossession(player, artifactType)) {
+                    try {
+                        player.getInventory().clearOrCountMatchingItems(ItemPredicateArgument.itemPredicate().parse(new StringReader(artifactType.resourceLocation)).create(null), -1, player.inventoryMenu.getCraftSlots());
+                        LOGGER.warn("Removed illegally possessed item " + artifactType.name() + " from player " + player.getScoreboardName());
+                    } catch (CommandSyntaxException e) {
+                        e.printStackTrace();
+                    }
+                    player.containerMenu.broadcastChanges();
+                    player.inventoryMenu.slotsChanged(player.getInventory());
+                }
+            }
+        }
     }
-    */
 
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
@@ -142,9 +147,9 @@ public class ArtifactsMod
         } else if (!server.overworld().isNight() && !server.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             server.getPlayerList().broadcastMessage(new TextComponent("Day has arrived. A weight has lifted..."), ChatType.SYSTEM, Util.NIL_UUID);
             server.getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).set(true, server);
-            if(!HANDLER.artifactSlotOpen(ArtifactType.FORGOTTEN_CHEST)) {
-                ((ForgottenChestplate)HANDLER.getArtifact(ArtifactType.FORGOTTEN_CHEST)).setFireResCharge(true);
-                ((ForgottenChestplate)HANDLER.getArtifact(ArtifactType.FORGOTTEN_CHEST)).setBreathCharge(true);
+            if(!ARTIFACT_HANDLER.artifactSlotOpen(ArtifactType.FORGOTTEN_CHEST)) {
+                ((ForgottenChestplate)ARTIFACT_HANDLER.getArtifact(ArtifactType.FORGOTTEN_CHEST)).setFireResCharge(true);
+                ((ForgottenChestplate)ARTIFACT_HANDLER.getArtifact(ArtifactType.FORGOTTEN_CHEST)).setBreathCharge(true);
             }
         }
         server.getPlayerList().getPlayers().forEach((player) -> {
@@ -183,17 +188,16 @@ public class ArtifactsMod
             }
         }
         LOGGER.info("onEntityDamaged");
-        HANDLER.checkAllPossession(server);
+        ARTIFACT_HANDLER.checkAllPossession(server);
     }
     @SubscribeEvent
     public void onPlayerDestroyItem(PlayerDestroyItemEvent event) {
         LOGGER.info("onPlayerDestroyItem");
-        HANDLER.checkAllPossession(server);
+        ARTIFACT_HANDLER.checkAllPossession(server);
     }
 
     @SubscribeEvent
     public void onPlayerDisconnect(final PlayerEvent.PlayerLoggedOutEvent event) {
-
     }
 
     @SubscribeEvent
@@ -225,7 +229,7 @@ public class ArtifactsMod
                 for(ArtifactType artifactType : artifactTypes) {
                     ItemStack artifactItem = new ItemStack(ArtifactType.getItemForArtifactType(artifactType));
                     player.drop(artifactItem, true, true);
-                    HANDLER.clearPossession(artifactType);
+                    ARTIFACT_HANDLER.clearPossession(artifactType);
                 }
             }
         }
@@ -234,37 +238,33 @@ public class ArtifactsMod
     @SubscribeEvent
     public void onItemPickup(PlayerEvent.ItemPickupEvent event) {
         System.out.println("Event fired");
-        System.out.println(HANDLER.getArtifact(ArtifactType.FORGOTTEN_HELM));
+        System.out.println(ARTIFACT_HANDLER.getArtifact(ArtifactType.FORGOTTEN_HELM));
         if(event.getStack().getItem() instanceof IArtifactItem artifactItem) {
-            HANDLER.updateArtifact(artifactItem, (artifactItem).getArtifactType()).changePossession(event.getPlayer());
+            ARTIFACT_HANDLER.updateArtifact(artifactItem, (artifactItem).getArtifactType()).changePossession(event.getPlayer());
         }
-        System.out.println(HANDLER.getArtifact(ArtifactType.FORGOTTEN_HELM));
+        System.out.println(ARTIFACT_HANDLER.getArtifact(ArtifactType.FORGOTTEN_HELM));
     }
     @SubscribeEvent
     public void onPlayerContainerEvent(PlayerContainerEvent.Close event) {
+        //
         Set<Item> set = new HashSet<Item>();
         ArrayList<Integer> indices = new ArrayList<Integer>();
         for (ArtifactType artifactType : ArtifactType.values()) {
-            IArtifactItem artifact = HANDLER.getArtifact(artifactType);
+            IArtifactItem artifact = ARTIFACT_HANDLER.getArtifact(artifactType);
             if (artifact != null) {
                 set.add(artifact.asItem());
             }
         }
         Container container = event.getContainer().getSlot(0).container;
         Player player = event.getPlayer();
-        if(container.hasAnyOf(Collections.unmodifiableSet(set))) {
-            for(Item item : set) {
-                HANDLER.getArtifactTracker(((IArtifactItem)item).getArtifactType()).checkContainerAndUpdate(container);
-            }
-        }
         for(Item item : set) {
-            HANDLER.getArtifactTracker(((IArtifactItem)item).getArtifactType()).checkPlayerAndUpdate(player);
+            ARTIFACT_HANDLER.getArtifactTracker(((IArtifactItem)item).getArtifactType()).checkPlayerAndUpdatePossessionStatus(player);
         }
     }
     @SubscribeEvent
     public void onPlayerDropItem(ItemTossEvent event) {
         if (event.getEntityItem().getItem().getItem() instanceof IArtifactItem artifactItem) {
-            HANDLER.clearPossession((artifactItem).getArtifactType());
+            ARTIFACT_HANDLER.clearPossession((artifactItem).getArtifactType());
         }
     }
 

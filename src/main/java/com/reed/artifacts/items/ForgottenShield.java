@@ -21,7 +21,7 @@ public class ForgottenShield extends ShieldItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenShield) {
-            ArtifactsMod.HANDLER.clearArtifact(artifactType);
+            ArtifactsMod.ARTIFACT_HANDLER.clearArtifact(artifactType);
         }
     }
 }

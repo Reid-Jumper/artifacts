@@ -1,5 +1,6 @@
 package com.reed.artifacts.items;
 
+import com.reed.artifacts.ArtifactsModSaveData;
 import com.reed.artifacts.init.ItemInit;
 import com.reed.artifacts.util.ArtifactTrackerTicker;
 import com.reed.artifacts.util.ArtifactType;
@@ -7,8 +8,7 @@ import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
@@ -20,6 +20,7 @@ import java.util.Map;
 public class ArtifactHandler {
     private final Map<ArtifactType, IArtifactItem> artifactItems = new HashMap<>();
     private final Map<ArtifactType, ArtifactTrackerTicker> artifactTrackers = new HashMap<>();
+    private final ArtifactsModSaveData artifactsModSaveData;
 
     public static List<ArtifactType> getPlayerArtifacts(Player player) {
         ArrayList<ArtifactType> results = new ArrayList<>();
@@ -55,25 +56,22 @@ public class ArtifactHandler {
         return results;
     }
 
-    public ArtifactHandler() {
-        for(ArtifactType artifactType : ArtifactType.values()) {
-            artifactItems.put(artifactType, null);
-            artifactTrackers.put(artifactType, new ArtifactTrackerTicker());
-        }
+    public ArtifactHandler(ArtifactsModSaveData artifactsModSaveData) {
+        this.artifactsModSaveData = artifactsModSaveData;
     }
 
     public boolean artifactSlotOpen(ArtifactType type) {
-        return artifactItems.get(type) == null;
+        return artifactItems.get(type) == null && artifactsModSaveData.getArtifactOwner(type) == null;
     }
 
     public void putArtifact(IArtifactItem item, ArtifactType type) {
         artifactItems.put(type, item);
-        artifactTrackers.put(type, new ArtifactTrackerTicker((IArtifactItem) item.asItem()));
+        artifactTrackers.put(type, new ArtifactTrackerTicker((IArtifactItem) item.asItem(), artifactsModSaveData));
     }
 
     public void clearArtifact(ArtifactType type) {
         artifactItems.put(type, null);
-        artifactTrackers.put(type, new ArtifactTrackerTicker());
+        artifactTrackers.remove(type);
     }
     public IArtifactItem getArtifact(ArtifactType type) {
         return artifactItems.get(type);
@@ -91,8 +89,9 @@ public class ArtifactHandler {
         for (ArtifactTrackerTicker tracker : artifactTrackers.values()) {
             if (tracker != null) {
                 if (tracker.isPossessionRegistered()) {
-                    if (tracker.possessedByEntity() && tracker.getLastEntityInPossession() instanceof Player) {
-                        if (!tracker.isHoldingArtifacts((Player)tracker.getLastEntityInPossession())) {
+                    if (tracker.isPossessionRegistered() && tracker.getLastEntityInPossession() != null) {
+                        ServerPlayer player = server.getPlayerList().getPlayerByName(tracker.getLastEntityInPossession());
+                        if (player != null && !tracker.isHoldingArtifacts(player)) {
                             clearArtifact(tracker.getArtifactItem().getArtifactType());
                             server.getPlayerList().broadcastMessage(new TextComponent("An artifact has been lost to the world..."), ChatType.SYSTEM, Util.NIL_UUID);
                         }
@@ -101,7 +100,13 @@ public class ArtifactHandler {
             }
         }
     }
+
     public void clearPossession(ArtifactType type) {
         artifactTrackers.get(type).clearPossession();
+    }
+
+    public boolean hasPossession(Player player, ArtifactType type) {
+        String artifactOwner = artifactsModSaveData.getArtifactOwner(type);
+        return (artifactOwner != null && artifactOwner.equals(player.getScoreboardName()));
     }
 }

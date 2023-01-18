@@ -29,7 +29,7 @@ public class ForgottenChestplate extends ArmorItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenChestplate) {
-            ArtifactsMod.HANDLER.clearArtifact(artifactType);
+            ArtifactsMod.ARTIFACT_HANDLER.clearArtifact(artifactType);
         }
     }
     public boolean getFireResCharge() {
