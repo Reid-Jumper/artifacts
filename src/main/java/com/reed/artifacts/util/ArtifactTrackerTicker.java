@@ -6,9 +6,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.Collections;
@@ -60,12 +57,8 @@ public class ArtifactTrackerTicker {
     public Container getLastBlockInPossession() {
         return this.lastBlockInPossession;
     }
-    public void tickDown() {
-        if(this.isTickable) {
-            this.ticks--;
-        }
-    }
-    public boolean possessionRegistered() {
+
+    public boolean isPossessionRegistered() {
         return this.lastEntityInPossession != null || this.lastBlockInPossession != null;
     }
     public boolean possessedByEntity() {
@@ -74,9 +67,7 @@ public class ArtifactTrackerTicker {
     public void resetTicks() {
         this.ticks = 12096000;
     }
-    public boolean isTickable() {
-        return this.isTickable;
-    }
+
     public <T> boolean changePossession(T entity) {
         System.out.println("Changing possession");
         if(entity instanceof LivingEntity) {
@@ -103,7 +94,7 @@ public class ArtifactTrackerTicker {
         }
     }
     public void checkPlayerAndUpdate(Player player) {
-        if(checkPlayer(player)) {
+        if(isHoldingArtifacts(player)) {
             changePossession(player);
         }
     }
@@ -112,7 +103,7 @@ public class ArtifactTrackerTicker {
         set.add((Item)artifactItem);
         return container.hasAnyOf(Collections.unmodifiableSet(set));
     }
-    public boolean checkPlayer(Player player) {
+    public boolean isHoldingArtifacts(Player player) {
         return player.getInventory().contains(new ItemStack(artifactItem));
     }
     public void clearPossession() {
