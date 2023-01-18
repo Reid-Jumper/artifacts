@@ -28,7 +28,7 @@ public class ForgottenHelm extends ArmorItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenHelm) {
-            ArtifactsMod.HANDLER.clearArtifact(artifactType);
+            ArtifactsMod.ARTIFACT_HANDLER.clearArtifact(artifactType);
         }
     }
 

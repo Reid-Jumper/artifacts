@@ -27,7 +27,7 @@ public class ForgottenBow extends BowItem implements IArtifactItem {
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
         if(item instanceof ForgottenBow) {
-            ArtifactsMod.HANDLER.clearArtifact(artifactType);
+            ArtifactsMod.ARTIFACT_HANDLER.clearArtifact(artifactType);
         }
     }
 
