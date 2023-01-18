@@ -32,7 +32,7 @@ public class ForgottenSword extends SwordItem implements IArtifactItem {
 
     @Override
     public boolean hurtEnemy(ItemStack item, LivingEntity hurtEntity, LivingEntity damagingEntity) {
-        hurtEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 100, 0, false, true));
+        hurtEntity.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 1, false, true));
         hurtEntity.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 100, 0, false, true));
         return super.hurtEnemy(item, hurtEntity, damagingEntity);
     }
