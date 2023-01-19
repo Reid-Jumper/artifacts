@@ -29,7 +29,11 @@ public class ArtifactsModSaveData extends SavedData {
     private boolean chestplateBreathCharged = true;
 
     public static ArtifactsModSaveData create() {
-        return new ArtifactsModSaveData();
+        ArtifactsModSaveData artifactsModSaveData = new ArtifactsModSaveData();
+        for (ArtifactType artifactType : ArtifactType.values()) {
+            artifactsModSaveData.artifactDestructionMap.put(artifactType, true);
+        }
+        return artifactsModSaveData;
     }
 
     @Override
