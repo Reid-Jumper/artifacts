@@ -11,13 +11,9 @@ import net.minecraft.world.item.Item;
 public class ForgottenChestplate extends ArmorItem implements IArtifactItem {
 
     private final ArtifactType artifactType = ArtifactType.FORGOTTEN_CHEST;
-    private boolean breathCharge;
-    private boolean fireResCharge;
 
     public ForgottenChestplate(ArmorMaterial material, EquipmentSlot slot, Item.Properties prop) {
         super(material, slot, prop);
-        breathCharge = true;
-        fireResCharge = true;
     }
 
     @Override
@@ -32,17 +28,4 @@ public class ForgottenChestplate extends ArmorItem implements IArtifactItem {
             ArtifactsMod.ARTIFACT_HANDLER.clearArtifact(artifactType);
         }
     }
-    public boolean getFireResCharge() {
-        return fireResCharge;
-    }
-    public void setFireResCharge(boolean charge) {
-        fireResCharge = charge;
-    }
-    public boolean getBreathCharge() {
-        return breathCharge;
-    }
-    public void setBreathCharge(boolean charge) {
-        breathCharge = charge;
-    }
-
 }

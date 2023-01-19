@@ -13,14 +13,12 @@ import net.minecraft.Util;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.Container;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.EntityDamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
@@ -47,10 +45,10 @@ import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 // The value here should match an entry in the META-INF/mods.toml file
@@ -63,7 +61,9 @@ public class ArtifactsMod
     public static ArtifactHandler ARTIFACT_HANDLER;
     public ArtifactsModSaveData artifactsModSaveData;
 
-    public MinecraftServer server;
+    public static MinecraftServer SERVER;
+
+    public static final Duration ARTIFACT_EXPIRY = Duration.ofDays(14);
 
     public ArtifactsMod() {
 
@@ -112,31 +112,48 @@ public class ArtifactsMod
     {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
-        server = event.getServer();
-        artifactsModSaveData = server.overworld().getDataStorage().computeIfAbsent(ArtifactsModSaveData::load, ArtifactsModSaveData::create, ArtifactsModSaveData.ARTIFACTS_MOD_DATA);
+        SERVER = event.getServer();
+//        server.getAllLevels().forEach(serverLevel -> serverLevel.getEntities(EntityTypeTest.forClass(ItemEntity.class), new Predicate<ItemEntity>() {
+//            @Override
+//            public boolean test(ItemEntity itemEntity) {
+//                return itemEntity.getItem().getItem() ;
+//            }
+//        }));
+        artifactsModSaveData = SERVER.overworld().getDataStorage().computeIfAbsent(ArtifactsModSaveData::load, ArtifactsModSaveData::create, ArtifactsModSaveData.ARTIFACTS_MOD_DATA);
         ARTIFACT_HANDLER = new ArtifactHandler(artifactsModSaveData);
 
     }
 
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
-        if (server.overworld().isNight() && server.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
-            server.getPlayerList().broadcastMessage(new TextComponent("Night has fallen. The world grows more dangerous..."), ChatType.SYSTEM, Util.NIL_UUID);
-            server.getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).set(false, server);
-        } else if (!server.overworld().isNight() && !server.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
-            server.getPlayerList().broadcastMessage(new TextComponent("Day has arrived. A weight has lifted..."), ChatType.SYSTEM, Util.NIL_UUID);
-            server.getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).set(true, server);
-            if(!ARTIFACT_HANDLER.artifactSlotOpen(ArtifactType.FORGOTTEN_CHEST)) {
-                ((ForgottenChestplate)ARTIFACT_HANDLER.getArtifact(ArtifactType.FORGOTTEN_CHEST)).setFireResCharge(true);
-                ((ForgottenChestplate)ARTIFACT_HANDLER.getArtifact(ArtifactType.FORGOTTEN_CHEST)).setBreathCharge(true);
+        // If a player with an artifact is gone for too long, clear possession and consider the artifact lost
+        for(Map.Entry<String, Instant> entry : artifactsModSaveData.getLastSeenTimes().entrySet()) {
+            if (Instant.now().minus(ARTIFACT_EXPIRY).isAfter(entry.getValue())) {
+                for (ArtifactType artifactType : ArtifactType.values()) {
+                    String lastEntityInPossession = ARTIFACT_HANDLER.getLastEntityInPossession(artifactType);
+                    if (lastEntityInPossession != null && lastEntityInPossession.equals(entry.getKey())) {
+                        ARTIFACT_HANDLER.clearPossession(artifactType);
+                        ARTIFACT_HANDLER.clearArtifact(artifactType);
+                    }
+                }
             }
         }
-        server.getPlayerList().getPlayers().forEach((player) -> {
+        if (SERVER.overworld().isNight() && SERVER.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+            SERVER.getPlayerList().broadcastMessage(new TextComponent("Night has fallen. The world grows more dangerous..."), ChatType.SYSTEM, Util.NIL_UUID);
+            SERVER.getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).set(false, SERVER);
+        } else if (!SERVER.overworld().isNight() && !SERVER.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+            SERVER.getPlayerList().broadcastMessage(new TextComponent("Day has arrived. A weight has lifted..."), ChatType.SYSTEM, Util.NIL_UUID);
+            SERVER.getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).set(true, SERVER);
+            // Reset chestplate charges when it becomes day
+            artifactsModSaveData.setChestplateFireResistanceCharged(true);
+            artifactsModSaveData.setChestplateBreathCharged(true);
+        }
+        SERVER.getPlayerList().getPlayers().forEach((player) -> {
             if(player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof ForgottenHelm) {
                 player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 399, 0, true, true));
             }
             if(player.getItemBySlot(EquipmentSlot.LEGS).getItem() instanceof ForgottenLeggings) {
-                if(server.overworld().isNight()) {
+                if(SERVER.overworld().isNight()) {
                     player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 399, 0, true, true));
                 } else {
                     player.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 399, 0, true, true));
@@ -151,6 +168,7 @@ public class ArtifactsMod
         LOGGER.info("Hello from player login");
 
         Player player = ((Player)event.getEntityLiving());
+        artifactsModSaveData.clearLastSeenTimeFor(player);
         List<ArtifactType> artifactTypes = ArtifactHandler.getPlayerArtifacts(player);
         if (!artifactTypes.isEmpty()) {
             for(ArtifactType artifactType : artifactTypes) {
@@ -172,12 +190,12 @@ public class ArtifactsMod
     public void onEntityDamaged(LivingDamageEvent event) {
         DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> handleChestplateAbilityOnEntityDamaged(event));
         DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> handleBootsAbilityOnEntityDamaged(event));
-        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> ARTIFACT_HANDLER.checkAllPossession(server));
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> ARTIFACT_HANDLER.checkAllPossession(SERVER));
     }
 
     @SubscribeEvent
     public void onPlayerDestroyItem(PlayerDestroyItemEvent event) {
-        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> ARTIFACT_HANDLER.checkAllPossession(server));
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> ARTIFACT_HANDLER.checkAllPossession(SERVER));
     }
 
     @SubscribeEvent
@@ -233,20 +251,20 @@ public class ArtifactsMod
         if(entity.getItemBySlot(EquipmentSlot.CHEST).getItem() instanceof ForgottenChestplate && !entity.getLevel().isClientSide()) {
             if(event.getSource() instanceof EntityDamageSource) {
                 event.getSource().getEntity().setSecondsOnFire(20);
-            }else if(event.getSource().isFire() && ((ForgottenChestplate)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).getFireResCharge() == true) {
+            }else if(event.getSource().isFire() && artifactsModSaveData.isChestplateFireResistanceCharged()) {
                 event.setCanceled(true);
                 event.getEntityLiving().addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 6000, 0, false, true));
-                ((ForgottenChestplate)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).setFireResCharge(false);
-            }else if(event.getSource().equals(DamageSource.DROWN) && ((ForgottenChestplate)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).getBreathCharge() == true) {
+                artifactsModSaveData.setChestplateFireResistanceCharged(false);
+            }else if(event.getSource().equals(DamageSource.DROWN) && artifactsModSaveData.isChestplateBreathCharged()) {
                 event.setCanceled(true);
                 event.getEntityLiving().addEffect(new MobEffectInstance(MobEffects.WATER_BREATHING, 6000, 0, false, true));
-                ((ForgottenChestplate)entity.getItemBySlot(EquipmentSlot.CHEST).getItem()).setBreathCharge(false);
+                artifactsModSaveData.setChestplateBreathCharged(false);
             }
         }
     }
 
     private void recordPlayerLastSeenInfoOnLogout(final PlayerEvent.PlayerLoggedOutEvent event) {
-        LOGGER.error("Please implement the recordPlayerLastSeenInfoOnLogout function.");
+        artifactsModSaveData.setLastSeenTimeFor(event.getPlayer(), Instant.now());
     }
 
     private void removeIllegalArtifactsOnPlayerSpawn(PlayerEvent.PlayerRespawnEvent event) {
@@ -268,7 +286,7 @@ public class ArtifactsMod
     }
 
     private void dropArtifactsAndUpdatePossessionOnPlayerDeath(LivingDeathEvent event) {
-        if (event.getEntityLiving() instanceof Player && server.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
+        if (event.getEntityLiving() instanceof Player && SERVER.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             Player player = ((Player)event.getEntityLiving());
             List<ArtifactType> artifactTypes = ArtifactHandler.getPlayerArtifacts(player);
             if (!artifactTypes.isEmpty()) {
@@ -283,24 +301,15 @@ public class ArtifactsMod
 
     private void setPlayerArtifactPossessionOnItemPickup(PlayerEvent.ItemPickupEvent event) {
         System.out.println("Event fired");
-        System.out.println(ARTIFACT_HANDLER.getArtifact(ArtifactType.FORGOTTEN_HELM));
         if(event.getStack().getItem() instanceof IArtifactItem artifactItem) {
-            ARTIFACT_HANDLER.updateArtifact(artifactItem, (artifactItem).getArtifactType()).changePossession(event.getPlayer());
+            ARTIFACT_HANDLER.changePossession(event.getPlayer(), artifactItem.getArtifactType());
         }
-        System.out.println(ARTIFACT_HANDLER.getArtifact(ArtifactType.FORGOTTEN_HELM));
     }
 
     private void setPlayerArtifactPossessionOnContainerEvent(PlayerContainerEvent.Close event) {
-        Set<Item> set = new HashSet<Item>();
-        for (ArtifactType artifactType : ArtifactType.values()) {
-            IArtifactItem artifact = ARTIFACT_HANDLER.getArtifact(artifactType);
-            if (artifact != null) {
-                set.add(artifact.asItem());
-            }
-        }
         Player player = event.getPlayer();
-        for(Item item : set) {
-            ARTIFACT_HANDLER.getArtifactTracker(((IArtifactItem)item).getArtifactType()).checkPlayerAndUpdatePossessionStatus(player);
+        for (ArtifactType artifactType : ArtifactType.values()) {
+            ARTIFACT_HANDLER.checkPlayerAndUpdatePossessionStatus(artifactType, player);
         }
     }
 

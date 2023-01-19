@@ -31,7 +31,7 @@ public abstract class AbstractGenTile extends BlockEntity {
         });
         ServerLevel serverLevel = (ServerLevel)level;
         if(serverLevel.tryAddFreshEntityWithPassengers(entity)) {
-            ArtifactsMod.ARTIFACT_HANDLER.putArtifact((IArtifactItem) entity.getItem().getItem(), artifactType);
+            ArtifactsMod.ARTIFACT_HANDLER.putArtifact(artifactType);
         }
     }
 
