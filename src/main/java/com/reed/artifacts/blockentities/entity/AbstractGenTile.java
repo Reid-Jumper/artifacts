@@ -29,6 +29,7 @@ public abstract class AbstractGenTile extends BlockEntity {
             p_138828_.moveTo(be.getBlockPos().getX(), be.getBlockPos().getY() + 1, be.getBlockPos().getZ(), p_138828_.getYRot(), p_138828_.getXRot());
             return p_138828_;
         });
+        entity.setUnlimitedLifetime();
         ServerLevel serverLevel = (ServerLevel)level;
         if(serverLevel.tryAddFreshEntityWithPassengers(entity)) {
             ArtifactsMod.ARTIFACT_HANDLER.putArtifact(artifactType);
