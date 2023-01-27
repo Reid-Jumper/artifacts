@@ -5,6 +5,7 @@ import com.reed.artifacts.util.ArtifactType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.saveddata.SavedData;
+import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 
 import java.time.Instant;
@@ -17,6 +18,11 @@ public class ArtifactsModSaveData extends SavedData {
     public static final String ARTIFACTS_MOD_DATA = "artifacts_mod_data";
     public static final String KEY_CHESTPLATE_FIRE_RES_CHARGE = "chestplate_fire_res_charge";
     public static final String KEY_CHESTPLATE_BREATH_CHARGE = "chestplate_breath_charge";
+    public static final String KEY_END_POSITION_X = "end_position_x";
+    public static final String KEY_END_POSITION_Y = "end_position_y";
+    public static final String KEY_END_POSITION_Z = "end_position_z";
+    public static final String KEY_END_SIZE = "end_size";
+    public static final String KEY_GAME_WON = "game_won";
 
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final String LAST_SEEN_PREFIX = "LAST_SEEN_";
@@ -24,6 +30,9 @@ public class ArtifactsModSaveData extends SavedData {
     private final Map<ArtifactType, String> artifactOwnersMap = new HashMap<>();
     private final Map<ArtifactType, Boolean> artifactDestructionMap = new HashMap<>();
     private final Map<String, Instant> playersLastSeenMap = new HashMap<>();
+    private Vec3 endPosition = null;
+    private double endSize = 0;
+    private boolean gameWon = false;
 
     private boolean chestplateFireResistanceCharged = true;
     private boolean chestplateBreathCharged = true;
@@ -59,6 +68,17 @@ public class ArtifactsModSaveData extends SavedData {
         }
         tag.putBoolean(KEY_CHESTPLATE_BREATH_CHARGE, chestplateBreathCharged);
         tag.putBoolean(KEY_CHESTPLATE_FIRE_RES_CHARGE, chestplateFireResistanceCharged);
+
+        if (endPosition != null) {
+            tag.putDouble(KEY_END_POSITION_X, endPosition.x);
+            tag.putDouble(KEY_END_POSITION_Y, endPosition.y);
+            tag.putDouble(KEY_END_POSITION_Z, endPosition.z);
+        }
+        if (endSize != 0) {
+            tag.putDouble(KEY_END_SIZE, endSize);
+        }
+
+        tag.putBoolean(KEY_GAME_WON, gameWon);
         return tag;
     }
 
@@ -90,6 +110,24 @@ public class ArtifactsModSaveData extends SavedData {
         }
         if (tag.contains(KEY_CHESTPLATE_FIRE_RES_CHARGE)) {
             artifactsModSaveData.chestplateFireResistanceCharged = tag.getBoolean(KEY_CHESTPLATE_FIRE_RES_CHARGE);
+        }
+        if (
+                tag.contains(KEY_END_POSITION_X) &&
+                tag.contains(KEY_END_POSITION_Y) &&
+                tag.contains(KEY_END_POSITION_Z)
+        ) {
+            artifactsModSaveData.endPosition = new Vec3(
+                    tag.getDouble(KEY_END_POSITION_X),
+                    tag.getDouble(KEY_END_POSITION_Y),
+                    tag.getDouble(KEY_END_POSITION_Z)
+            );
+        }
+        if (tag.contains(KEY_END_SIZE)) {
+            artifactsModSaveData.endSize = tag.getDouble(KEY_END_SIZE);
+        }
+
+        if (tag.contains(KEY_GAME_WON)) {
+            artifactsModSaveData.gameWon = tag.getBoolean(KEY_GAME_WON);
         }
         return artifactsModSaveData;
     }
@@ -141,6 +179,33 @@ public class ArtifactsModSaveData extends SavedData {
 
     public void clearLastSeenTimeFor(Player player) {
         playersLastSeenMap.remove(player.getScoreboardName());
+        setDirty();
+    }
+
+    public void setEndPosition(Vec3 vec3) {
+        endPosition = vec3;
+        setDirty();
+    }
+
+    public void setEndSize(double size) {
+        endSize = size;
+        setDirty();
+    }
+
+    public double getEndSize() {
+        return endSize;
+    }
+
+    public Vec3 getEndPosition() {
+        return endPosition;
+    }
+
+    public boolean isGameWon() {
+        return gameWon;
+    }
+
+    public void setGameWon(boolean isWon) {
+        gameWon = isWon;
         setDirty();
     }
 

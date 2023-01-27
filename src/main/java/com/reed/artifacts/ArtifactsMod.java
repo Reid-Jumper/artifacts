@@ -3,6 +3,7 @@ package com.reed.artifacts;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.logging.LogUtils;
+import com.reed.artifacts.commands.MakeEndCommand;
 import com.reed.artifacts.init.BlockInit;
 import com.reed.artifacts.init.ItemInit;
 import com.reed.artifacts.init.TileEntityInit;
@@ -23,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
@@ -113,15 +115,9 @@ public class ArtifactsMod
         // Do something when the server starts
         LOGGER.info("HELLO from server starting");
         SERVER = event.getServer();
-//        server.getAllLevels().forEach(serverLevel -> serverLevel.getEntities(EntityTypeTest.forClass(ItemEntity.class), new Predicate<ItemEntity>() {
-//            @Override
-//            public boolean test(ItemEntity itemEntity) {
-//                return itemEntity.getItem().getItem() ;
-//            }
-//        }));
         artifactsModSaveData = SERVER.overworld().getDataStorage().computeIfAbsent(ArtifactsModSaveData::load, ArtifactsModSaveData::create, ArtifactsModSaveData.ARTIFACTS_MOD_DATA);
         ARTIFACT_HANDLER = new ArtifactHandler(artifactsModSaveData);
-
+        MakeEndCommand.register(SERVER.getCommands().getDispatcher(), artifactsModSaveData);
     }
 
     @SubscribeEvent
@@ -138,6 +134,8 @@ public class ArtifactsMod
                 }
             }
         }
+
+        // Change Keep Inventory rule
         if (SERVER.overworld().isNight() && SERVER.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             SERVER.getPlayerList().broadcastMessage(new TextComponent("Night has fallen. The world grows more dangerous..."), ChatType.SYSTEM, Util.NIL_UUID);
             SERVER.getGameRules().getRule(GameRules.RULE_KEEPINVENTORY).set(false, SERVER);
@@ -148,6 +146,8 @@ public class ArtifactsMod
             artifactsModSaveData.setChestplateFireResistanceCharged(true);
             artifactsModSaveData.setChestplateBreathCharged(true);
         }
+
+        // Handle Helm and Leggings abilities
         SERVER.getPlayerList().getPlayers().forEach((player) -> {
             if(player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof ForgottenHelm) {
                 player.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 399, 0, true, true));
@@ -161,6 +161,23 @@ public class ArtifactsMod
                 }
             }
         });
+
+        // Check win condition
+        if (!artifactsModSaveData.isGameWon()) {
+            SERVER.getPlayerList().getPlayers().forEach((serverPlayer -> {
+                if (ArtifactHandler.getPlayerArtifacts(serverPlayer).size() == 7) {
+
+                    if (artifactsModSaveData.getEndPosition() != null && serverPlayer.level == SERVER.overworld()) {
+                        double distance = (artifactsModSaveData.getEndPosition().subtract(serverPlayer.position())).horizontalDistance();
+                        if (distance < (artifactsModSaveData).getEndSize()) {
+                            artifactsModSaveData.setGameWon(true);
+                            PlayerTeam playersTeam = SERVER.getScoreboard().getPlayersTeam(serverPlayer.getScoreboardName());
+                            SERVER.getPlayerList().broadcastMessage(new TextComponent("The game is over. " + playersTeam.getName() + " has won!"), ChatType.SYSTEM, Util.NIL_UUID);
+                        }
+                    }
+                }
+            }));
+        }
     }
 
     @SubscribeEvent
@@ -286,8 +303,7 @@ public class ArtifactsMod
     }
 
     private void dropArtifactsAndUpdatePossessionOnPlayerDeath(LivingDeathEvent event) {
-        if (event.getEntityLiving() instanceof Player && SERVER.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
-            Player player = ((Player)event.getEntityLiving());
+        if (event.getEntityLiving() instanceof Player player && SERVER.getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             List<ArtifactType> artifactTypes = ArtifactHandler.getPlayerArtifacts(player);
             if (!artifactTypes.isEmpty()) {
                 for(ArtifactType artifactType : artifactTypes) {
