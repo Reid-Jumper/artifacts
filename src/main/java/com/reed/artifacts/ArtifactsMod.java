@@ -129,7 +129,8 @@ public class ArtifactsMod
                     String lastEntityInPossession = ARTIFACT_HANDLER.getLastEntityInPossession(artifactType);
                     if (lastEntityInPossession != null && lastEntityInPossession.equals(entry.getKey())) {
                         ARTIFACT_HANDLER.clearPossession(artifactType);
-                        ARTIFACT_HANDLER.clearArtifact(artifactType);
+                        ARTIFACT_HANDLER.clearArtifact(artifactType, true);
+                        LOGGER.warn("Player " + lastEntityInPossession + " held artifact " + artifactType + " off server too long. Cleared possession...");
                     }
                 }
             }
@@ -316,9 +317,9 @@ public class ArtifactsMod
     }
 
     private void setPlayerArtifactPossessionOnItemPickup(PlayerEvent.ItemPickupEvent event) {
-        System.out.println("Event fired");
         if(event.getStack().getItem() instanceof IArtifactItem artifactItem) {
             ARTIFACT_HANDLER.changePossession(event.getPlayer(), artifactItem.getArtifactType());
+            LOGGER.info(event.getPlayer().getScoreboardName() + " has picked up " + artifactItem.getArtifactType());
         }
     }
 
