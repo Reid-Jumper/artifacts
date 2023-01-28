@@ -26,7 +26,7 @@ public abstract class AbstractGenTile extends BlockEntity {
         compoundtag.put("Item", item);
         compoundtag.putString("id", "minecraft:item");
         ItemEntity entity = (ItemEntity) EntityType.loadEntityRecursive(compoundtag, level, (p_138828_) -> {
-            p_138828_.moveTo(be.getBlockPos().getX(), be.getBlockPos().getY() + 1, be.getBlockPos().getZ(), p_138828_.getYRot(), p_138828_.getXRot());
+            p_138828_.moveTo(be.getBlockPos().getX() + 0.5, be.getBlockPos().getY() + 1, be.getBlockPos().getZ() + 0.5, p_138828_.getYRot(), p_138828_.getXRot());
             return p_138828_;
         });
         entity.setUnlimitedLifetime();
