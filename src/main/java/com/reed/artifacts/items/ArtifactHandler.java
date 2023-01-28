@@ -100,7 +100,7 @@ public class ArtifactHandler {
     }
 
     public void checkPlayerAndUpdatePossessionStatus(ArtifactType artifactType, Player player) {
-        if(!ArtifactHandler.getPlayerArtifacts(player).contains(artifactType)) {
+        if(ArtifactHandler.getPlayerArtifacts(player).contains(artifactType)) {
             changePossession(player, artifactType);
         }
     }
