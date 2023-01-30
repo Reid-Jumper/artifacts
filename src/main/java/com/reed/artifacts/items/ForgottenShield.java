@@ -23,6 +23,7 @@ public class ForgottenShield extends ShieldItem implements IArtifactItem {
         return artifactType;
     }
 
+    /*
     @Override
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
@@ -31,6 +32,8 @@ public class ForgottenShield extends ShieldItem implements IArtifactItem {
             LOGGER.info("Artifact " + artifactType + " entity destroyed.");
         }
     }
+
+     */
 
     @Override
     public boolean isValidRepairItem(ItemStack stack, ItemStack stack2) {

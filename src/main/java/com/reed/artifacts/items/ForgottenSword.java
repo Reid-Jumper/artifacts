@@ -26,6 +26,7 @@ public class ForgottenSword extends SwordItem implements IArtifactItem {
         return artifactType;
     }
 
+    /*
     @Override
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
@@ -34,6 +35,8 @@ public class ForgottenSword extends SwordItem implements IArtifactItem {
                 LOGGER.info("Artifact " + artifactType + " entity destroyed.");
         }
     }
+
+     */
 
     @Override
     public boolean hurtEnemy(ItemStack item, LivingEntity hurtEntity, LivingEntity damagingEntity) {

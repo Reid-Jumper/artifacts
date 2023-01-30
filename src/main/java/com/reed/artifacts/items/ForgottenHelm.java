@@ -27,6 +27,7 @@ public class ForgottenHelm extends ArmorItem implements IArtifactItem {
         return artifactType;
     }
 
+    /*
     @Override
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
@@ -35,6 +36,8 @@ public class ForgottenHelm extends ArmorItem implements IArtifactItem {
             LOGGER.info("Artifact " + artifactType + " entity destroyed.");
         }
     }
+
+     */
 
     @Override
     public boolean makesPiglinsNeutral(ItemStack stack, LivingEntity wearer) {

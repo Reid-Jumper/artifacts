@@ -20,6 +20,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.block.Block;
@@ -29,6 +30,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityLeaveWorldEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -244,6 +246,11 @@ public class ArtifactsMod
         DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> clearPlayerArtifactPossessionOnDrop(event));
     }
 
+    @SubscribeEvent
+    public void onEntityLeaveWorldEvent(EntityLeaveWorldEvent event) {
+        DistExecutor.unsafeRunWhenOn(Dist.DEDICATED_SERVER, () -> () -> checkEntityLeaveWorldForArtifacts(event));
+    }
+
     // You can use EventBusSubscriber to automatically subscribe events on the contained class (this is subscribing to the MOD
     // Event bus for receiving Registry Events)
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -333,6 +340,14 @@ public class ArtifactsMod
     private void clearPlayerArtifactPossessionOnDrop(ItemTossEvent event) {
         if (event.getEntityItem().getItem().getItem() instanceof IArtifactItem artifactItem) {
             ARTIFACT_HANDLER.clearPossession((artifactItem).getArtifactType());
+        }
+    }
+
+    private void checkEntityLeaveWorldForArtifacts(EntityLeaveWorldEvent event) {
+        if (event.getEntity() instanceof ItemEntity) {
+            if (((ItemEntity)event.getEntity()).getItem().getItem() instanceof IArtifactItem artifactItem && (event.getEntity().getRemovalReason() == Entity.RemovalReason.DISCARDED || event.getEntity().getRemovalReason() == Entity.RemovalReason.KILLED)) {
+                ARTIFACT_HANDLER.clearArtifact((artifactItem).getArtifactType(), false);
+            }
         }
     }
 

@@ -24,6 +24,7 @@ public class ForgottenBoots extends ArmorItem implements IArtifactItem {
         return artifactType;
     }
 
+    /*
     @Override
     public void onDestroyed(ItemEntity entity) {
         Item item = entity.getItem().getItem();
@@ -32,4 +33,5 @@ public class ForgottenBoots extends ArmorItem implements IArtifactItem {
             LOGGER.info("Artifact " + artifactType + " entity destroyed.");
         }
     }
+    */
 }
