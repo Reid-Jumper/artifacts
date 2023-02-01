@@ -1,11 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "down": "artifacts:d",
-    "up": "artifacts:d",
-    "north": "artifacts:d",
-    "south": "artifacts:d",
-    "west": "artifacts:d",
-    "east": "artifacts:d"
+    "all": "artifacts:blocks/forgotten_boots_gen"
   }
 }

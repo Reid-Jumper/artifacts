@@ -1,11 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "down": "artifacts:e",
-    "up": "artifacts:e",
-    "north": "artifacts:e",
-    "south": "artifacts:e",
-    "west": "artifacts:e",
-    "east": "artifacts:e"
+    "all": "artifacts:blocks/forgotten_sword_gen"
   }
 }

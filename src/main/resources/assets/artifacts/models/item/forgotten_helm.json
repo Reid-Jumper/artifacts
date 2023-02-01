@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "minecraft:item/chainmail_helmet"
+    "layer0": "artifacts:items/forgotten_helm"
   }
 }

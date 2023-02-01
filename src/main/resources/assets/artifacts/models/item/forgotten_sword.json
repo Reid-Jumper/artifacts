@@ -1,3 +1,6 @@
 {
-  "parent": "item/diamond_sword"
+  "parent": "item/diamond_sword",
+  "textures": {
+    "layer0": "artifacts:items/forgotten_sword"
+  }
 }

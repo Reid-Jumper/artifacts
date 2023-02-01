@@ -1,11 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "down": "artifacts:a",
-    "up": "artifacts:a",
-    "north": "artifacts:a",
-    "south": "artifacts:a",
-    "west": "artifacts:a",
-    "east": "artifacts:a"
+    "all": "artifacts:blocks/forgotten_helm_gen"
   }
 }
