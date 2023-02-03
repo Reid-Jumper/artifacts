@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "down": "artifacts:c",
+    "up": "artifacts:c",
+    "north": "artifacts:c",
+    "south": "artifacts:c",
+    "west": "artifacts:c",
+    "east": "artifacts:c"
+  }
+}

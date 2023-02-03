@@ -1,0 +1,18 @@
+{
+  "itemGroup.artifacts": "Artifacts Mod",
+
+  "item.artifacts.a": "A",
+  "item.artifacts.b": "B",
+  "item.artifacts.c": "C",
+  "item.artifacts.d": "D",
+  "item.artifacts.e": "E",
+  "item.artifacts.f": "F",
+  "item.artifacts.g": "G",
+  "block.artifacts.a_gen_block": "a_gen_block",
+  "block.artifacts.b_gen_block": "b_gen_block",
+  "block.artifacts.c_gen_block": "c_gen_block",
+  "block.artifacts.d_gen_block": "d_gen_block",
+  "block.artifacts.e_gen_block": "e_gen_block",
+  "block.artifacts.f_gen_block": "f_gen_block",
+  "block.artifacts.g_gen_block": "g_gen_block"
+}
