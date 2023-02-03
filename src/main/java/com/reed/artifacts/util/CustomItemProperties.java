@@ -4,10 +4,12 @@ import com.reed.artifacts.init.ItemInit;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 
-public class BowItemProperties {
-    public static void addBowItemProperties() {
+public class CustomItemProperties {
+    public static void addCustomItemProperties() {
         makeBow(ItemInit.FORGOTTEN_BOW.get());
+        makeShield(ItemInit.FORGOTTEN_SHIELD.get());
     }
 
     private static void makeBow(Item item) {
@@ -20,6 +22,11 @@ public class BowItemProperties {
         });
         ItemProperties.register(item, new ResourceLocation("pulling"), (p_174630_, p_174631_, p_174632_, p_174633_) -> {
            return p_174632_ != null && p_174632_.isUsingItem() && p_174632_.getUseItem() == p_174630_ ? 1.0F : 0.0F;
+        });
+    }
+    private static void makeShield(Item item) {
+        ItemProperties.register(item, new ResourceLocation("blocking"), (p_174590_, p_174591_, p_174592_, p_174593_) -> {
+            return p_174592_ != null && p_174592_.isUsingItem() && p_174592_.getUseItem() == p_174590_ ? 1.0F : 0.0F;
         });
     }
 }
