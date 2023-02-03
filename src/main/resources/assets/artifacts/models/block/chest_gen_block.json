@@ -1,11 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "down": "artifacts:b",
-    "up": "artifacts:b",
-    "north": "artifacts:b",
-    "south": "artifacts:b",
-    "west": "artifacts:b",
-    "east": "artifacts:b"
+    "all": "artifacts:blocks/forgotten_chest_gen"
   }
 }
