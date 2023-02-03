@@ -22,10 +22,10 @@ public class ItemInit {
     public static final RegistryObject<Item> FORGOTTEN_BOOTS = ITEMS.register("forgotten_boots",
             () -> new ForgottenBoots(AncientArtifactsMaterial.ANCIENT_ARTIFACT_BOOTS, EquipmentSlot.FEET, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
     public static final RegistryObject<Item> FORGOTTEN_SWORD = ITEMS.register("forgotten_sword",
-            () -> new ForgottenSword(AncientArtifactsTier.ANCIENT_ARTIFACT, 3, -2.4F, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
-    public static final RegistryObject<Item> FORGOTTEN_BOW = ITEMS.register("forgotten_bow", () -> new ForgottenBow(new Item.Properties().tab(ArtifactsTab.instance).setNoRepair().defaultDurability(1500)));
+            () -> new ForgottenSword(AncientArtifactsTier.ANCIENT_ARTIFACT, 14, -2.4F, new Item.Properties().tab(ArtifactsTab.instance).setNoRepair()));
+    public static final RegistryObject<Item> FORGOTTEN_BOW = ITEMS.register("forgotten_bow", () -> new ForgottenBow(new Item.Properties().tab(ArtifactsTab.instance).setNoRepair().defaultDurability(3000)));
     public static final RegistryObject<Item> FORGOTTEN_SHIELD = ITEMS.register("forgotten_shield",
-            () -> new ForgottenShield(new Item.Properties().tab(ArtifactsTab.instance).setNoRepair().defaultDurability(5000)));
+            () -> new ForgottenShield(new Item.Properties().tab(ArtifactsTab.instance).setNoRepair().defaultDurability(10000)));
 
     public static class ArtifactsTab extends CreativeModeTab {
 

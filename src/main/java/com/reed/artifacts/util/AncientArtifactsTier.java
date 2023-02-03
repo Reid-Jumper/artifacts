@@ -7,7 +7,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
 public enum AncientArtifactsTier implements Tier {
-    ANCIENT_ARTIFACT(4, 3000, 10.0F, 5.0F, 5, () -> {
+    ANCIENT_ARTIFACT(4, 16384, 10.0F, 10.0F, 5, () -> {
         return null;
     });
 
