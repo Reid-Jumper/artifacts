@@ -7,6 +7,8 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ShieldItem;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 import org.slf4j.Logger;
 
 public class ForgottenShield extends ShieldItem implements IArtifactItem {
@@ -38,5 +40,10 @@ public class ForgottenShield extends ShieldItem implements IArtifactItem {
     @Override
     public boolean isValidRepairItem(ItemStack stack, ItemStack stack2) {
         return false;
+    }
+
+    @Override
+    public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
+        return ToolActions.DEFAULT_SHIELD_ACTIONS.contains(toolAction) || super.canPerformAction(stack, toolAction);
     }
 }

@@ -1,3 +1,26 @@
 {
-  "parent": "item/bow"
+  "parent": "item/bow",
+  "textures": {
+    "layer0": "artifacts:items/forgotten_bow"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "pulling": 1
+      },
+      "model": "artifacts:item/forgotten_bow_draw"
+    },
+    {
+      "predicate": {
+        "pull": 0.65
+      },
+      "model": "artifacts:item/forgotten_bow_draw1"
+    },
+    {
+      "predicate": {
+        "pull": 0.9
+      },
+      "model": "artifacts:item/forgotten_bow_draw2"
+    }
+  ]
 }

@@ -1,11 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "down": "artifacts:g",
-    "up": "artifacts:g",
-    "north": "artifacts:g",
-    "south": "artifacts:g",
-    "west": "artifacts:g",
-    "east": "artifacts:g"
+    "all": "artifacts:blocks/forgotten_shield_gen"
   }
 }

@@ -1,0 +1,6 @@
+{
+  "parent": "item/bow",
+  "textures": {
+    "layer0": "artifacts:items/forgotten_bow_draw2"
+  }
+}

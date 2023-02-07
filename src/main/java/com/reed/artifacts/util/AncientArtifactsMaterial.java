@@ -12,10 +12,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import java.util.function.Supplier;
 
 public enum AncientArtifactsMaterial implements ArmorMaterial {
-    ANCIENT_ARTIFACT(ArtifactsMod.MOD_ID + ":ancient_artifacts", 200, new int[]{7, 15, 20, 8}, 50, SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0F, 0.1F, () -> {
+    ANCIENT_ARTIFACT("ancient_artifacts", 200, new int[]{7, 15, 20, 8}, 50, SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0F, 0.1F, () -> {
         return Ingredient.of(ItemInit.FORGOTTEN_HELM.get());
     }),
-    ANCIENT_ARTIFACT_BOOTS(ArtifactsMod.MOD_ID + ":ancient_artifacts_boots", 200, new int[]{7, 15, 20, 8}, 50, SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0F, 0.5F, () -> {
+    ANCIENT_ARTIFACT_BOOTS("ancient_artifacts_boots", 200, new int[]{7, 15, 20, 8}, 50, SoundEvents.ARMOR_EQUIP_DIAMOND, 3.0F, 0.5F, () -> {
         return Ingredient.of(ItemInit.FORGOTTEN_BOOTS.get());
     });
 
@@ -56,7 +56,7 @@ public enum AncientArtifactsMaterial implements ArmorMaterial {
         return this.repairIngredient.get();
     }
     public String getName() {
-        return this.name;
+        return ArtifactsMod.MOD_ID + ":" + this.name;
     }
     public float getToughness() {
         return this.toughness;

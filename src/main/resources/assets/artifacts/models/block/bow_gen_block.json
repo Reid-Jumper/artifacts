@@ -1,11 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "down": "artifacts:f",
-    "up": "artifacts:f",
-    "north": "artifacts:f",
-    "south": "artifacts:f",
-    "west": "artifacts:f",
-    "east": "artifacts:f"
+    "all": "artifacts:blocks/forgotten_bow_gen"
   }
 }
